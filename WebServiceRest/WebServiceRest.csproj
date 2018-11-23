@@ -43,8 +43,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -87,13 +95,53 @@
     </Content>
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
+    <Content Include="WebServiceValaisBooking.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>WebServiceValaisBooking.Context.cs</LastGenOutput>
+      <DependentUpon>WebServiceValaisBooking.edmx</DependentUpon>
+    </Content>
+    <Content Include="WebServiceValaisBooking.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>WebServiceValaisBooking.edmx</DependentUpon>
+      <LastGenOutput>WebServiceValaisBooking.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Hotel.cs">
+      <DependentUpon>WebServiceValaisBooking.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Picture.cs">
+      <DependentUpon>WebServiceValaisBooking.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reservation.cs">
+      <DependentUpon>WebServiceValaisBooking.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Room.cs">
+      <DependentUpon>WebServiceValaisBooking.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserData.cs">
+      <DependentUpon>WebServiceValaisBooking.tt</DependentUpon>
+    </Compile>
+    <Compile Include="WebServiceValaisBooking.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WebServiceValaisBooking.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="WebServiceValaisBooking.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WebServiceValaisBooking.tt</DependentUpon>
+    </Compile>
+    <Compile Include="WebServiceValaisBooking.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WebServiceValaisBooking.edmx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -103,10 +151,20 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+    <EntityDeploy Include="WebServiceValaisBooking.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>WebServiceValaisBooking.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="WebServiceValaisBooking.edmx.diagram">
+      <DependentUpon>WebServiceValaisBooking.edmx</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
