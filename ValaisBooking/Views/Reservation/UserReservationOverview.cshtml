@@ -1,0 +1,148 @@
+﻿@using DTO
+@using BLL
+@model List<Reservation>
+
+
+
+
+<div class="col-md-12 h4">Vos réservations</div>
+<hr/>
+<div class="col-md-12 row backTrp rounded reservationOverview">
+    @{
+        if (Model.Count == 0)
+        {
+            <div class="col-md-12">Aucune réservation enregistrée pour l'utilisateur</div>
+        }
+        else
+        {
+            <div class="col-md-12 row">
+                <div class="col-md-1 enTete">N°</div>
+                <div class="col-md-3 enTete">Hotel</div>
+                <div class="col-md-2 enTete">Première nuit</div>
+                <div class="col-md-2 enTete">Dernière nuit</div>
+                <div class="col-md-2 enTete">Prix</div>
+                <div class="col-md-2 enTete">Détail</div>
+            </div>
+            foreach (Reservation reservation in Model)
+            {
+
+                Hotel hotel = HotelManager.GetHotelFromId(
+                    reservation.Rooms
+                    .Select(r => r.IdHotel)
+                    .FirstOrDefault());
+
+                <div class="col-md-12 row reservationBlock rounded" reservationId ="@reservation.IdReservation">
+                    <div class="col-md-1 colContent">@reservation.IdReservation</div>
+                    <div class="col-md-3 colContent">@hotel.Name</div>
+                    <div class="col-md-2 colContent">@reservation.FirstNight.ToShortDateString()</div>
+                    <div class="col-md-2 colContent">@reservation.LastNight.ToShortDateString()</div>
+                    <div class="col-md-2 colContent">@reservation.Price CHF</div>
+                    <div class="col-md-2 colContent">
+                        @{
+                            if (reservation.Cancelled)
+                            {
+                                <img src="~/Content/layout/annulle.png"/>
+                            }
+                            else {
+                                <img data-toggle="tooltip" title="Détail des chambres" src="~/Content/layout/loupe.png" class="viewDetail" reservationId ="@reservation.IdReservation"/>
+
+                                if (reservation.FirstNight.Date > DateTime.Now.Date)
+                                {
+                                    <img data-toggle="tooltip" title="Annuler la réservation?" src="~/Content/layout/cancel.png" class="cancel" reservationId="@reservation.IdReservation" />
+                                }
+                                else if (reservation.FirstNight.Date == DateTime.Now.Date)
+                                {
+                                    <img data-toggle="tooltip" class="noCancel" title="Merci de contacter l'hotel pour annuler cette réservation qui débute ce jour." src="~/Content/layout/cancel_grey.png" />
+                                }
+                            }
+                        }
+                    </div>
+
+                    <!-- Detail des chambres de la reservation-->
+                    <div class="col-md-12 row detailReservation" reservationId ="@reservation.IdReservation">
+                        <div class="col-md-4 enTete">N° de chambre</div>
+                        <div class="col-md-4 enTete">Type</div>
+                        <div class="col-md-4 enTete">Options</div>
+
+                        @{
+                            foreach (Room room in reservation.Rooms)
+                            {
+                                <div class="col-md-4 colContent">
+                                    @room.IdRoom
+                                </div>
+                                <div class="col-md-4 colContent">
+                                    @{
+                                        string type = "simple";
+                                        if (room.Type != 1)
+                                        {
+                                            type = "double";
+                                        }
+                                    }
+                                    <img data-toggle="tooltip" title="Chambre @type" src="~/Content/layout/@(type).png" />
+                                </div>
+                                <div class="col-md-4 colContent">
+                                @{
+                                    if (room.HasHairDryer)
+                                    {
+                                        <img class="roomOption" data-toggle="tooltip" src="~/Content/layout/dryer.png" title="Sèche-cheveux" />
+                                    }
+                                    if (room.HasTV)
+                                    {
+                                        <img class="roomOption" data-toggle="tooltip" src="~/Content/layout/tv.png" title="Télévision" />
+                                    }
+                                    if(!room.HasTV && !room.HasHairDryer)
+                                    {
+                                        @:-
+                                    }
+                                }
+                            </div>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+        }
+    }
+
+
+</div>
+
+@section scripts{
+    <script>
+        //initialisation des tooltips
+        $('[data-toggle="tooltip"]').tooltip(); 
+
+        //gestion des détails de réservation
+        $(".detailReservation").hide();
+
+        $(".viewDetail").click(function () {
+
+            $(".detailReservation[reservationId='" + $(this).attr("reservationId") + "']").toggle();
+            $(".detailReservation[reservationId!='" + $(this).attr("reservationId") + "']").hide();
+
+            //si le le detail est visible on affiche une bordure autour de la réservation
+            $(".detailReservation").each(function () {
+                var reservationBlock = $(".reservationBlock[reservationId='" + $(this).attr("reservationId") + "']");
+                if ($(this).is(':visible')){
+                    reservationBlock.css("background-color", "rgba(211,211,211, 0.5)");
+                    reservationBlock.css("margin-bottom", "10px");
+                    reservationBlock.css("padding-top", "10px");
+                }
+                else
+                    {
+                    reservationBlock.css("background-color", "unset");
+                    reservationBlock.css("margin-bottom", "0");
+                    reservationBlock.css("padding-top", "0");
+                }
+            });
+            
+        });
+
+        //gestion des demandes d'annulation
+        $(".cancel").click(function () {
+            var dataSent = {'reservationId': $(this).attr("reservationId")};
+            callModal("Annulation de réservation", "Reservation", "_CancelReservation", "POST", null, dataSent);
+        });
+
+    </script>
+}

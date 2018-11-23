@@ -1,0 +1,32 @@
+﻿@using DTO
+@using BLL
+@model Reservation
+
+@{
+    
+    Hotel hotel = HotelManager.GetHotelFromId(
+        Model.Rooms
+            .Select(r => r.IdHotel)
+            .ToList()
+            .FirstOrDefault()
+     );
+
+    <div class="alert alert-danger"> 
+        Vous êtes sur le point <strong>d'annuler</strong>
+        votre réservation N°@Model.IdReservation à l'hotel @hotel.Name pour les nuits du 
+        @Model.FirstNight.Date.ToShortDateString() à @Model.LastNight.Date.ToShortDateString() !
+    </div>
+
+    <div class="btn mTop10" id="cancelConfirmed">Confirmer l'annulation</div>
+
+    <script>
+        $("#cancelConfirmed").click(function () {
+            var dataSent = { 'reservationId': @Model.IdReservation};
+            callModal("Annulation de réservation", "Reservation", "_CancelConfirmed", "POST", null, dataSent);
+        });
+    </script>
+
+
+}
+
+

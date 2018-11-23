@@ -1,0 +1,13 @@
+﻿<div class="alert alert-success">
+    Réservation enregistrée avec succes !<br/> 
+    Redirection vers la liste de vos réservation...
+</div>
+
+<script>
+
+    // On modifie le bouton fermer du modal pour qu'il redirige vers l'acceuil
+    $("#BsModalCloseBtn").click(function(){
+        window.location.replace("/Reservation/UserReservationOverView");
+    });
+
+</script>

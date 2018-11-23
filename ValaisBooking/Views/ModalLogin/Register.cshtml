@@ -1,0 +1,78 @@
+﻿@using DTO;
+@model ValaisBooking.ViewModel.RegisterVM
+
+
+@{
+    if (((UserData)Session["UserData"]).IsEmpty)
+    {
+        <form id="FormModalRegister" method="post" onsubmit="return false">
+            <div class="maxW400">
+                @Html.ValidationSummary(true, "Erreur", new { @class = "alert alert-danger" })
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">@@</span>
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "E-mail" } })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">Prénom</span>
+                        @Html.EditorFor(model => model.Firstname, new { htmlAttributes = new { @class = "form-control", placeholder = "John" } })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.Firstname, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">Nom</span>
+                        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control", placeholder = "Doe" } })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">***</span>
+                        @Html.PasswordFor(model => model.Password, new { @class = "form-control", placeholder = "Mot de passe" })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        @Html.LabelFor(model => model.SaveCookie, htmlAttributes: new { @class = "form-control" })
+                        <span class="input-group-addon">
+                            @Html.CheckBoxFor(model => model.SaveCookie, new { htmlAttributes = new { @class = "form-control" } })
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="S'enregister" class="btn btn-dark mTop30" id="register" />
+                </div>
+                <div>Déjà un compte? <a href="#" id="askConnect">Connectez-vous!</a></div>
+            </div>
+        </form>
+        <script>
+
+        $('#askConnect').click(function () {
+            callModal("Se connecter", "ModalLogin", "Login", "GET");
+        });
+
+            $('#register').click(function () {
+                callModal("Enregistrement", "ModalLogin", "Register", "POST", "#FormModalRegister");
+        });
+            </script>
+        }
+    else
+    {
+        <div class="alert alert-success text-center">
+            Enregistrement terminé!<br />
+            Bonjour @(((UserData)Session["UserData"]).FirstName) !
+        </div>
+
+        <script>
+            refreshNavBar();
+        </script>
+    }
+}
+
+

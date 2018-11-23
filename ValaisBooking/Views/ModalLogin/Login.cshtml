@@ -1,0 +1,63 @@
+﻿@using DTO;
+@model ValaisBooking.ViewModel.ConnexionVM
+
+
+@{ 
+    if (((UserData)Session["UserData"]).IsEmpty)
+    {
+    <form id="FormModalLogin" method="post" onsubmit="return false">
+        <div class="maxW400">
+            @Html.ValidationSummary(true, "Erreur", new { @class = "alert alert-danger" })
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">@@</span>
+                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "E-mail" } })
+                </div>
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">***</span>
+                    @Html.PasswordFor(model => model.Password, new { @class = "form-control", placeholder = "Mot de passe" })
+                </div>
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    @Html.LabelFor(model => model.SaveCookie, htmlAttributes: new { @class = "form-control" })
+                    <span class="input-group-addon">
+                        @Html.CheckBoxFor(model => model.SaveCookie, new { htmlAttributes = new { @class = "form-control" } })
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Se connecter" class="btn mTop30" id="connect"/>
+            </div>
+            <div> Pas de compte? <a href="#" id="askRegister">Enregistrez-vous gratuitement!</a></div>
+        </div>
+    </form>
+
+    <script>
+        $('#askRegister').click(function () {
+            callModal("S'enregistrer", "ModalLogin", "Register", "GET");
+        }); 
+
+        $('#connect').click(function () {
+            callModal("Connexion", "ModalLogin", "Login", "POST", "#FormModalLogin");
+        });
+    </script>
+    }
+    else
+    {
+
+        <div class="alert alert-success text-center">
+            Connexion établie <br/>
+            Bonjour @(((UserData)Session["UserData"]).FirstName) !
+        </div>
+        <script>
+            refreshNavBar();
+        </script>
+    }
+}

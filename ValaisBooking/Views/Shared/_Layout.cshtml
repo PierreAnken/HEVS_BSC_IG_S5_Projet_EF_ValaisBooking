@@ -1,0 +1,109 @@
+﻿@using DTO;
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Valais Booking</title>
+    <link rel="icon" type="image/png" href="~/Content/layout/favicon.jpg" />
+    @Styles.Render("~/Content/css")
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark choco">
+        <a class="navbar-brand navMarginL" href="https://www.valais.ch/" target="_blank">
+            <img src="~/Content/layout/valais.png" width="30" height="30" alt="">
+        </a>
+        <ul class="navbar-nav  mr-auto">
+            <li class="nav-item">       
+                @Html.ActionLink("Accueil", "Index", "Home", null, new { @class = "nav-link" })
+            </li>
+        </ul>
+        <ul class="navbar-nav navMarginR" id="navBar" />
+    </nav>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Pierre Anken</p>
+        </footer>
+    </div>
+
+    <!-- Modal boostrap multi usages -->
+    <div class="modal fade" id="BsModal" tabindex="-1" role="dialog">
+        <div id="BsModalSize" class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="BsModalTitle">Title</h5>
+                </div>
+                <div class="modal-body" id="BsModalBody">
+                    Content
+                </div>
+                <div class="modal-footer" id="BsModalFooter">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="BsModalCloseBtn">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/popper")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/modernizr")
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>
+<script>
+    //fonction générales
+
+    //rafraichissement asynchrone de la barre de navigaiton
+    function refreshNavBar() {
+        $.ajax({
+            url: '/UserData/_RefreshNavBar',
+            type: "GET",
+            dataType: "html",
+            success: function (data) {
+                $("#navBar").html(data);
+            },
+            error: function () { alert('error'); }
+        }); 
+    }
+
+
+    //gestion simplifiée du modal depuis les view
+    function callModal(title, controller, action, postGet, selector = null, dataSent = null, big = null) {
+
+        $('#BsModalTitle').text(title);
+        $("#BsModalBody").css("max-height", ($(window).height() - 200) + "px");
+
+
+        var formData;
+        if (selector != null)
+            formData = $(selector).serialize();
+        else if (dataSent != null)
+            formData = dataSent;
+
+        if (big == null)
+            $('#BsModalSize').removeClass("modal-lg");
+        else
+            $('#BsModalSize').addClass("modal-lg");
+
+        $.ajax({
+            url: '/' + controller +'/'+action,
+            type: postGet,
+            dataType: "html",
+            data: formData,
+            success: function (data) {
+                $("#BsModalBody").html(data);
+                $("#BsModalBody").animate({ scrollTop: 0 });
+                $('#BsModal').modal('show');
+                $('#BsModal').trigger('focus')
+            },
+            error: function () { alert('error'); }
+        }); 
+    }
+
+    refreshNavBar();
+
+</script>

@@ -1,0 +1,228 @@
+﻿@model ValaisBooking.ViewModel.SearchVM
+@using DTO;
+@using BLL;
+@{
+    ViewBag.Title = "Accueil";
+    List<Hotel> hotels = HotelManager.GetAllHotel();
+}
+
+<div class="row">
+     <!-- Formulaire de recherche -->
+    <form class="rounded col-md-12 searchForm row" id="searchForm">
+  
+        <!-- elements cachés géré par Jquery et les icones-->
+        @Html.EditorFor(model => model.Star1)
+        @Html.EditorFor(model => model.Star2)
+        @Html.EditorFor(model => model.Star3)
+        @Html.EditorFor(model => model.Star4)
+        @Html.EditorFor(model => model.Star5)
+        @Html.EditorFor(model => model.MaxNightPrice)
+        @Html.EditorFor(model => model.HasWifi)
+        @Html.EditorFor(model => model.HasParking)
+        @Html.EditorFor(model => model.HasTV)
+        @Html.EditorFor(model => model.HasHairDryer)
+
+        <!-- Colonne 1 -->
+        <div class="col-md-2 text-center">
+            @Html.LabelFor(model => model.FirstNight)<br/>
+            @Html.EditorFor(model => model.FirstNight, new { htmlAttributes = new { @class = "form-control date searchFilter", id = "FirstNight", @readonly = "readonly" } })
+        </div>
+        <!-- Colonne 1 -->
+        <div class="col-md-2 text-center"> 
+                @Html.LabelFor(model => model.LastNight)<br />
+                @Html.EditorFor(model => model.LastNight, new { htmlAttributes = new { @class = "form-control date searchFilter", id = "LastNight", @readonly = "readonly" } })
+       </div>
+
+        <!-- Colonne 2 -->
+        <div class="col-md-1 text-center"> 
+            @Html.LabelFor(model => model.Adultes)<br />
+            @Html.DropDownListFor(m => m.Adultes,
+                    new SelectList(new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 })
+                    , htmlAttributes: new { @class = "form-control searchFilter" })
+        </div>
+
+        <!-- Colonne 3 -->
+        <div class="col-md-2 text-center"> 
+            @Html.LabelFor(model => model.Location)<br />
+            @{
+                //récupération de chaque location
+                List<string> locations = new List<string>() { "Valais" };
+                locations.AddRange(hotels.Select(r => r.Location)
+                        .Distinct()
+                        .ToList());
+            }
+            @Html.DropDownListFor(m => m.Location,
+                    new SelectList(locations)
+                    , htmlAttributes: new { @class = "form-control searchFilter" })
+        </div>
+
+        <!-- Colonne 4 -->
+        <div class=" col-md-5 row">
+            <div class="col-md-5 row ">
+                <div class="col-md-12 text-left">
+                    Prestige
+                </div>
+                <div class="col-md-12 text-left">
+                    Prix max. (CHF)
+                </div>
+                <div class="col-md-12 text-left">
+                    Services
+                </div>
+            </div>
+            <div class="col-md-7 row">
+                <div class="starDiv col-md-12">
+                    @{
+                        for (int i = 1; i <= 5; i++)
+                        {
+                            <img class="ranking bSearchFilter"  state="on" filterName="Star@(i)" prestige ="@i" src="@Url.Content("~/Content/layout/star_ranking.png")" />
+                        }
+                    }
+                </div>
+                <div class="col-md-12">
+                    @{ 
+                        //récupération prix min et max des chambres avec majoration 20%
+                        decimal[] minMax = RoomManager.GetMinMaxPriceFromRooms();
+                        decimal roundedMax = (Math.Round(minMax[1]*1.2m / 10, MidpointRounding.AwayFromZero) * 10);
+                        decimal roundedMin = (Math.Round(minMax[0] * 1.2m / 10, MidpointRounding.AwayFromZero) * 10);
+                    }
+                    <div id="sliderPrice" min="@roundedMin" max="@roundedMax">
+                        <div id="custom-handle" class="ui-slider-handle"></div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <img class="service bSearchFilter" data-toggle="tooltip" title="Parking" state="off" filterName="HasParking" src="@Url.Content("~/Content/layout/parking.png")" />
+                    <img class="service bSearchFilter" data-toggle="tooltip" title="Wifi" state="off" filterName="HasWifi" src="@Url.Content("~/Content/layout/wifi.png")" />
+                    <img class="service bSearchFilter" data-toggle="tooltip" title="Télévision" state="off" filterName="HasTV" src="@Url.Content("~/Content/layout/tv.png")" />
+                    <img class="service bSearchFilter" data-toggle="tooltip" title="Sèche-cheveux" state="off" filterName="HasHairDryer" src="@Url.Content("~/Content/layout/dryer.png")" />
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="rounded-bottom mx-auto" id="searchForResults">
+       Appliquer les filtres
+    </div>
+
+    <!-- Affichage des résultats de la recherche -->
+    <div class="col-md-12 rounded backTrp" id="searchResults" />
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+
+            //gestion du slider de prix
+            $(function () {
+                
+                var handle = $("#custom-handle");
+                var minCHF = parseInt($("#sliderPrice").attr("min"));
+                var maxCHF = parseInt($("#sliderPrice").attr("max"));
+
+                $("#sliderPrice").slider({
+                    min: minCHF,
+                    max: maxCHF,
+                    value: maxCHF,
+                    create: function () {
+                        handle.text($(this).slider("value"));
+                    },
+                    slide: function (event, ui) {
+                        handle.text(ui.value);
+                        $("#MaxNightPrice").val(ui.value);
+                        displayFilterButton();
+                    }
+                });
+            });
+  
+            //gestion de la modification des filtres binaires
+            $(".bSearchFilter").click(function () {
+                var filterName = $(this).attr("filterName");
+                //on inverse l'etat de la checkbox cachée
+                if ($("#" + filterName).val() == "True") {
+                    $("#" + filterName).val("False");
+                    $(this).attr("state","off");
+                }
+                else {
+                    $("#" + filterName).val("True");
+                    $(this).attr("state", "on");
+                }
+            });
+
+            //gestion de l'application des filtres
+            $("#searchForResults").hide();
+            
+            $("#searchForResults").click(function () {
+                refreshResults();
+            });
+
+            //on affiche la le bouton de filtrage si une option binaire est modifiée
+            $(".bSearchFilter").click(function () {
+                displayFilterButton();
+            });
+            // ou si une valeur de champ est modifiée
+            $(".searchFilter").change(function () {
+                displayFilterButton();
+            });
+
+            function displayFilterButton() {
+                $("#searchForResults").fadeIn("slow");
+            }
+            
+            function refreshResults() {
+                //on bloque les interactions pendant le chargement afin d'éviter un refresh multiple
+                $("#searchForResults").hide("slow");
+
+                //icone de chargement
+                $("#searchResults").html('<div class="loading col-md-12"><div class="col-md-12"><img class="loading" src="/Content/layout/Loading_icon.gif"/></div>'
+                    + '<div class="col-md-12">Chargement des résultats en cours...</div></div>');
+
+                //ajax de résultats de recherches
+                $.ajax({
+                    url: '/Room/_SearchResults',
+                    type: "POST",
+                    dataType: "html",
+                    data: $("#searchForm").serialize(),
+                    success: function (data) {
+                        $("#searchResults").html(data);
+                    },
+                    error: function () { alert('Erreur de chargement des données, merci de réactualiser la page'); }
+                });
+            }
+
+            //chargement de tous les resultats au chargement du site
+            refreshResults();
+
+            //gestion des datepicker
+            $(function () {
+                var dateFormat = "dd.mm.yy",
+                    from = $("#FirstNight")
+                        .datepicker({
+                            defaultDate: "+1d",
+                            showOtherMonths: true,
+                            selectOtherMonths: true,
+                            minDate: new Date()
+                        })
+                        .on("change", function () {
+                            to.datepicker("option", "minDate", getDate(this));
+                        }),
+                    to = $("#LastNight").datepicker({
+                        defaultDate: "+1d",
+                        showOtherMonths: true,
+                        selectOtherMonths: true,
+                        minDate: new Date()
+                    })
+                        .on("change", function () {
+                            from.datepicker("option", "maxDate", getDate(this));
+                        });
+
+                function getDate(element) {
+                    var date;
+                    try {
+                        date = $.datepicker.parseDate(dateFormat, element.value);
+                    } catch (error) {
+                        date = null;
+                    }
+                    return date;
+                }
+            });
+        });
+    </script>
+}

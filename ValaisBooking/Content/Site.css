@@ -1,0 +1,346 @@
+﻿
+body {
+    background-color: white;
+    background-image: url("layout/background.jpg");
+    background-repeat: no-repeat;
+    overflow: auto;
+}
+
+#BsModalBody {
+    overflow-y:auto;
+}
+
+hr {
+    border: 0.5px solid #5f5964;
+}
+
+.backTrp {
+    background-color: rgb(255, 255, 255);
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.formLogin {
+    padding: 30px;
+    border: 1px solid #3d3644;
+}
+
+.validation-summary-errors {
+ margin-bottom:15px;
+}
+.row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.mleft15 {
+    margin-left:15px;
+}
+
+
+.searchForm {
+    background-color: rgb(95, 89, 100);
+    background-color: rgba(95, 89, 100, 0.6);
+    color: lightgrey;
+    text-align: center;
+    border: 1px solid #3d3644;
+    padding: 10px;
+}
+
+img.ranking.bSearchFilter[state="on"] {
+    content: url("layout/star_ranking.png");
+}
+
+img.ranking.bSearchFilter[state="off"], img.ranking.bSearchFilter:hover{
+    content: url("layout/star_ranking_empty.png");
+}
+
+
+.ranking.bSearchFilter:hover {
+    cursor: pointer;
+}
+
+img.service{
+    border:none;
+    height:20px;
+    width:auto;
+    margin:5px;
+}
+
+    img.service:hover, img.service[state="on"] {
+        border-bottom: 2px solid #8FBC8F;
+    }
+
+#custom-handle {
+    width: 3em;
+    height: 1.6em;
+    top: 50%;
+    margin-top: -.8em;
+    text-align: center;
+    line-height: 1.6em;
+    font-size:small;
+}
+
+.starDiv:hover {
+    cursor: context-menu;
+}
+
+#searchForResults {
+    font-size: small;
+    padding-right: 10px;
+    padding-left: 10px;
+    border: 1px solid #3d3644;
+    border-top: none;
+    background-color: rgb(95, 89, 100);
+    background-color: rgba(95, 89, 100, 0.6);
+    color: lightgrey;
+}
+
+    #searchForResults:hover {
+        cursor: pointer;
+        background-color: #dcd9de;
+        color: #3d3644;
+    }
+
+#searchForm .control-label {
+    margin-right: 5px;
+}
+
+.form-control {
+    width: auto;
+    display: inline-block;
+}
+
+#searchResults {
+    margin-top:25px;
+}
+
+#searchResults, .reservationOverview {
+    border: 1px solid #3d3644;
+    padding: 10px;
+}
+.alert {
+    margin-bottom:0;
+}
+.btn {
+    background-color: #5f5964;
+    color: lightgrey;
+    border: 1px solid #dcd9de;
+    cursor: pointer;
+}
+
+.btn:disabled {
+    cursor:not-allowed;
+}
+
+.reserver {
+    margin:5px;
+}
+
+
+.btn:hover {
+    background-color: #dcd9de;
+    border: 1px solid #3d3644;
+    color: #3d3644;
+}
+
+.chocoClair {
+    background-color: #dcd9de;
+    border: 1px solid #3d3644;
+}
+
+.choco {
+    background-color: #3d3644;
+    color: lightgrey;
+}
+
+.etoiles {
+    margin-right: 5px;
+} 
+
+.hasDatepicker {
+    max-width: 110px;
+}
+.ui-datepicker-trigger {
+    margin-right:20px;
+}
+
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 20px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+
+.bg-dark {
+    background-color: #3d3644;
+}
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+.ranking {
+    vertical-align: 1px;
+}
+
+.navMarginR {
+    margin-right:50px;
+}
+
+.navMarginL {
+    margin-left: 50px;
+}
+
+.dropdown-item:hover {
+    background-color:lightgray;
+}
+
+.maxW400{
+    max-width : 400px;
+}
+
+.mTop30{
+    margin-top:30px;
+}
+
+img.loading {
+    height: 100px;
+    width: auto;
+}
+.roomMini {
+    height: 100px;
+    width: auto;
+}
+
+div.loading {
+    text-align: center;
+    margin: 30px;
+}
+.roomOption {
+    height:27px;
+    width:auto;
+    margin:5px;
+}
+
+
+footer {
+    margin-top: 30px;
+}
+
+.hotelPicSlideshow {
+    height: 200px;
+    width: auto;
+}
+.mTop10 {
+    margin-top: 10px;
+}
+
+.mBot10 {
+    margin-bottom: 10px;
+}
+.selectedRoom {
+    width: 100%;
+}
+
+/* Checkbox found at https://codepen.io/JTParrett/pen/tGkKx */
+
+.customCheckbox {
+    width: 20px;
+    height: 20px;
+    background: #dcd9de;
+    border-radius: 2px;
+    border: 1px solid #5f5964;
+    box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.1);
+    margin-left: 45%;
+    overflow: hidden;
+}
+
+    .customCheckbox.customCheckboxChecked {
+        background: #5f5964;
+    }
+
+    .customCheckbox input {
+        opacity: 0;
+        cursor: pointer;
+        z-index: 5;
+        width: 100%;
+        height: 100%;
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .customCheckbox span {
+        display: none;
+        text-align: center;
+        line-height: 17px;
+        font-size: 90%;
+        color: #dcd9de;
+        vertical-align: middle;
+    }
+
+    .customCheckbox.customCheckboxChecked span {
+        display: block;
+    }
+
+.filterGrp {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.detailReservation {
+    margin-top:10px;
+}
+.enTete {
+    font-weight:bold;
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.colContent {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.cancel, .noCancel {
+    height: 20px;
+    margin-left:10px;
+}
+
+.noCancel {
+    cursor:auto;
+}
+.param {
+        margin-right: 20px;
+        margin-left: 0;
+    }
+
+viewDetail:hover, img.cancel:hover, .description {
+    cursor: pointer;
+}
+
+.img-fluid {
+    margin-top:20px;
+    border:1px solid black;
+}
+.roomDispo{
+    height:20px;
+}
+
+.services {
+    height: 20px;
+    margin-right:10px;
+}
+
+.miniPhotoHotel {
+    height:192px;
+    width:auto;
+}
+.btn-room{
+    margin-top:40px;
+}

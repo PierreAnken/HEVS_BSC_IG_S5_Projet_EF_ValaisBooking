@@ -1,0 +1,413 @@
+﻿@using ValaisBooking.ViewModel;
+@using DTO;
+@using BLL;
+@model List <ResultsVM>
+
+@{
+
+    //Récupération de chaque hotel filtré
+    List<Hotel> hotelsFilteredDistinct = Model
+        .Select(r => r.Hotel)
+        .GroupBy(h => h.IdHotel)
+        .Select(g => g.First())
+        .ToList();
+
+    //gestion des cas sans résultats
+    if (hotelsFilteredDistinct.Count == 0)
+    {
+        <div class="col-md-12 alert alert-warning">
+            Aucun résultat pour les filtres selectionnés
+        </div>
+    }
+    else
+    {
+        @:<div class="hotelResults">
+        <!-- Lignes de résultats d'hotels-->
+        foreach (Hotel hotel in hotelsFilteredDistinct)
+        {
+
+            //récupération de toutes les chambres non filtrées de l'hotel
+            List<Room> rooms = Model
+                .Where(r => r.Room.IdHotel == hotel.IdHotel)
+                .Select(r => r.Room)
+                .ToList();
+
+            //calcul prix min et max des chambres par hotel
+            int prixMin = (int)rooms
+                .Where(h => h.IdHotel == hotel.IdHotel)
+                .Select(p => p.Price)
+                .Min();
+
+
+            int prixMax = (int)rooms
+                .Where(h => h.IdHotel == hotel.IdHotel)
+                .Select(p => p.Price)
+                .Max();
+
+            //calcul du nombre de chambres de l'hotel
+            int nbrChambre = rooms
+                .Where(r => r.IdHotel == hotel.IdHotel)
+                .Count();
+
+            //calcul du nombre de chambres libres simples
+            int nbrChambreLibreSimple = Model
+                .Where(r => r.Room.IdHotel == hotel.IdHotel)
+                .Where(r => r.Room.Type == 1)
+                .Select(p => p.Room)
+                .Count();
+
+            //calcul du nombre de chambres libres doubles
+            int nbrChambreLibreDouble = Model
+                .Where(r => r.Room.IdHotel == hotel.IdHotel)
+                .Where(r => r.Room.Type == 2)
+                .Select(p => p.Room)
+                .Count();
+
+             <!-- Block hotel + room -->
+            <div class="hoteView" hotelId="@hotel.IdHotel">
+
+                <!-- Hotel -->
+                <div class="row hotelDescription">
+                    <!-- Nom hotel -->
+                    <div class="col-md-12 h3">
+                        <div>
+                            @hotel.Name
+                        </div>
+                    </div>
+                    <!-- Colonne image -->
+                    <div class="col-md-4">
+                        <img class="img-thumbnail miniPhotoHotel" src="~/Content/HotelOverview/@hotel.Overview" />
+                    </div>
+                    <!-- Colonne 2 -->
+                    <div class="col-md-4">
+                        <div class="row">
+                            <!-- En-tetes -->
+                            <div class="col-md-6">
+                                <div>Prestige</div>
+                                <div>Localité</div>
+                                <div>Prix par nuit</div>
+                                <div>Disponibilités</div>
+                            </div>
+                            <!-- Contenus -->
+                            <div class="col-md-6">
+                                <div>
+                                    @{
+                                        for (int i = 1; i <= @hotel.Category; i++)
+                                        {
+                                            <img class="ranking" src="@Url.Content("~/Content/layout/star_ranking.png")"/>
+                                        }
+                                    }
+                                </div>
+                                <div>@hotel.Location</div>
+                                <div>
+                                    @{
+                                        string occupationInfo = "Prix indicatif d'une chambre pouvant varier selon l'affluence.";
+                                        if (prixMin == prixMax)
+                                        {
+                                            @prixMin @:CHF <span data-toggle="tooltip" title="@occupationInfo">*</span>
+                                        }
+                                        else
+                                        {
+                                            @prixMin @:- @prixMax CHF <span data-toggle="tooltip" title="@occupationInfo">*</span>
+                                        }
+                                    }
+                                </div>
+                                <div>
+                                    @{
+                                        if (nbrChambreLibreSimple > 0)
+                                        {
+                                            <img class="roomDispo" src="~/Content/layout/Simple.png" /> @:x @nbrChambreLibreSimple &nbsp;
+                                        }
+                                        if (nbrChambreLibreDouble > 0)
+                                        {
+                                            <img class="roomDispo" src="~/Content/layout/Double.png" /> @:x @nbrChambreLibreDouble
+                                        }
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-md-10  text-center btn-room">
+                                <a href="#" class="displayDetail btn" idHotel="@hotel.IdHotel">Détail des chambres</a>
+                            </div>
+                            <div class="col-md-2" />
+                        </div>
+                    </div>
+
+                    <!-- Colonne 3 -->
+                    <div class="col-md-4">
+                        <div class="row">
+                            <!-- En-tetes -->
+                            <div class="col-md-5">
+                                <div>Services</div>
+                                <div>Téléphone</div>
+                                <div>E-mail</div>
+                                <div>Site web</div>
+                            </div>
+                            <!-- Contenus -->
+                            <div class="col-md-7">
+                                @{
+                                    if (hotel.HasWifi)
+                                    {
+                                        <img class="services" data-toggle="tooltip" src="~/Content/layout/wifi.png" title="Wifi" />
+                                    }
+                                    if (hotel.HasParking)
+                                    {
+                                        <img class="services" data-toggle="tooltip" src="~/Content/layout/parking.png" title="Parking" />
+                                    }
+                                    if (!hotel.HasWifi && !hotel.HasParking)
+                                    {
+                                        @:-
+                                    }
+                                }
+                                <div>@hotel.Phone</div>
+                                <div><a href="mailto:@(hotel.Email)">@hotel.Email</a></div>
+                                @{
+                                    string website = @hotel.Website;
+                                    if (!website.Contains("http:"))
+                                        website = "http://" + website;
+                                }
+                                <div><a href="@website"> @hotel.Website</a></div>
+                            </div>
+                            <div class="col-md-11 text-center btn-room">
+                                <a href="#" class="description btn" idHotel="@hotel.IdHotel">Description de l'hotel</a>
+                            </div>
+                            <div class="col-md-1"/>
+                        </div>
+                    </div>
+                    </div>
+                     <!-- Fin de la description de l'hotel -->
+                            <!-- Detail des chambres de l'hotel -->
+                            <div class="row detailHotel" hotelId="@hotel.IdHotel">
+                                <div class="col-md-12"><hr /></div>
+                                <!-- En-tête de colonne -->
+                                <div class="col-md-12 mTop10 mBot10 row">
+                                    <div class="col-md-1 enTete">
+                                        N°
+                                    </div>
+                                    <div class="col-md-3 enTete">
+                                        Type
+                                    </div>
+                                    <div class="col-md-2 enTete">
+                                        Prix pour @ViewBag.NbrNight nuit(s)
+                                    </div>
+                                    <div class="col-md-2 enTete">
+                                        Options
+                                    </div>
+                                    <div class="col-md-2 enTete">
+                                        Aperçu
+                                    </div>
+                                    <div class="col-md-2 enTete">
+                                        Selectionner
+                                    </div>
+                                </div>
+                                @{
+                                    foreach (Room room in rooms)
+                                    {
+
+                                        //récupération du prix du forfait
+                                        double prixForfait = Model
+                                            .Where(p => p.Room.IdRoom == room.IdRoom)
+                                            .Select(p => p.PriceForDates)
+                                            .FirstOrDefault();
+
+                                        <div class="col-md-12 row">
+                                            <div class="col-md-1 colContent">@room.Number</div>
+                                            <div class="col-md-3 colContent">
+                                                @{
+                                                    string type = "simple";
+                                                    if (room.Type != 1)
+                                                    {
+                                                        type = "double";
+                                                    }
+                                                }
+                                                <img src="~/Content/layout/@(type).png" />
+                                            </div>
+                                            <div class="col-md-2 colContent">
+                                                @((int)prixForfait) CHF
+                                            </div>
+                                            <div class="col-md-2 colContent">
+                                                @{
+                                                    if (room.HasHairDryer)
+                                                    {
+                                                        <img class="roomOption" data-toggle="tooltip" src="~/Content/layout/dryer.png" title="Sèche-cheveux" />
+                                                    }
+                                                    if (room.HasTV)
+                                                    {
+                                                        <img class="roomOption" data-toggle="tooltip" src="~/Content/layout/tv.png" title="Télévision" />
+                                                    }
+                                                    if (!room.HasTV && !room.HasHairDryer)
+                                                    {
+                                                        @:-
+                                                    }
+                                                }
+                                            </div>
+                                            <div class="col-md-2 colContent">
+                                                <img src="~/Content/layout/text.png" class="description" idRoom="@room.IdRoom" />
+                                            </div>
+                                            <div class="col-md-2 textRoom colContent">
+                                                @Html.CheckBox("selectedRooms", false, htmlAttributes: new { @class = "selectedRoom", roomId = room.IdRoom, hotelId = hotel.IdHotel, nbrPlace = room.Type, priceNights = prixForfait })
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
+                                <!-- Résumé de la sélection -->
+                                <div class="mTop10 col-md-12 row resume" hotelId="@hotel.IdHotel">
+                                    <div class="col-md-12 font-weight-bold mTop10">
+                                        Résumé de la sélection
+                                    </div>
+                                    <div class="col-md-5">
+                                        <span class="roomCount" hotelId="@hotel.IdHotel">x</span> chambre(s) pour un total de <span class="bedCount" hotelId="@hotel.IdHotel">x</span> personne(s).
+                                    </div>
+                                    <div class="col-md-4">
+                                        Prix total pour @ViewBag.NbrNight nuits: <span class="priceTotal font-weight-bold" hotelId="@hotel.IdHotel">x</span> CHF.
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input class="btn btn-reserver" value="Réserver maintenant" FirstNight="@ViewBag.FirstNight" LastNight="@ViewBag.LastNight" hotelId="@hotel.IdHotel" disabled />
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                @{
+                                    if (hotelsFilteredDistinct.Last() != hotel)
+                                    {
+                                        @:<hr />
+                        }
+                                    else
+                                    {
+                                        @:<p>
+                        }
+                                }
+                        </div>
+                    </div>
+        }
+    @:</div>
+    }
+}
+
+<script>
+
+
+    $(document).ready(function () {
+
+
+        //affichage de la description de l'hotel/chambre dans le popup
+        $(".description").click(function () {
+
+            if ($(this).attr('idHotel')) {
+                var dataSent = { 'hotelId': $(this).attr("idHotel") };
+                callModal("Description de l'hotel", "Hotel", "_HotelDescription", "POST", null, dataSent,1);
+            }
+            else if ($(this).attr('idRoom')) {
+                var dataSent = { 'IdRoom': $(this).attr('idRoom') };
+                callModal("Aperçu de la chambre", "Room", "_RoomDescription", "POST", null, dataSent,1);
+            }
+        });
+
+        //Quand l'utilisateur valide sa réservation
+        $(".btn-reserver").click(function () {
+            //on récupère les données
+            var hotelId = $(this).attr("hotelId");
+            var RoomSelected = [];
+            $(".selectedRoom[hotelId='" + hotelId + "']:checked").each(function () {
+                RoomSelected.push($(this).attr("roomId"));
+            });
+            var dataSent = { 'roomsId': RoomSelected, 'firstNight': $(this).attr("firstNight"), 'LastNight': $(this).attr("LastNight")};
+            callModal("Reservation", "Reservation", "CreateReservation", "POST", null, dataSent);
+
+        });
+
+        //initialisation des tooltips bootstrap
+        $('[data-toggle="tooltip"]').tooltip(); 
+
+        //par defaut on masque le résumé des chambres selectionnées
+        $(".resume").hide();
+
+        //Gestion du détail de la réservation si une chambre est choisie
+        $(".selectedRoom").click(function () {
+            var hotelId = $(this).attr("hotelId");
+            var nbrSelected = 0;
+            var totalPrice = 0;
+            var totalPlace = 0;
+
+            $(".selectedRoom[hotelId='" + hotelId + "']:checked").each(function () {
+                totalPrice += parseInt($(this).attr("priceNights"));
+                totalPlace += parseInt($(this).attr("nbrPlace"));
+                nbrSelected++;
+            });
+
+           //mise à jour du résumé de la sélection
+            $(".roomCount[hotelId='" + hotelId + "']").text(nbrSelected);
+            $(".bedCount[hotelId='" + hotelId + "']").text(totalPlace);
+            $(".priceTotal[hotelId='" + hotelId + "']").text(totalPrice);
+
+            if (nbrSelected > 0) {
+                $(".btn-reserver[hotelId='" + hotelId + "']").prop('disabled', false);
+                $(".resume[hotelId='" + hotelId + "']").show('slow');
+            }
+            else{
+                $(".btn-reserver[hotelId='" + hotelId + "']").prop('disabled', true);
+                $(".resume[hotelId='" + hotelId + "']").hide('slow');
+            }
+        });
+
+        //par defaut on masque le détail de tous les hotels
+        $(".detailHotel").hide();
+
+        //gestion de l'affichage du détail des chambre
+        $(".displayDetail").click(function () {
+            var idHotel = $(this).attr("idHotel");
+            $(".detailHotel").each(function () {
+                if (idHotel == $(this).attr("hotelId")) {
+                    $(this).toggle(1000, "swing");
+                }
+                else
+                    $(this).hide();
+            });
+
+            $('html, body').animate({
+                scrollTop: $(".hoteView[hotelId='" + idHotel + "']").offset().top - 120
+            }, 1500);
+        });
+
+        //checkbox custom 
+        //found at https://codepen.io/JTParrett/pen/tGkKx
+
+        $(function () {
+            var checkboxs = $('input[type=checkbox].selectedRoom');
+
+            checkboxs.each(function () {
+                $(this).wrap('<div class="customCheckbox"></div>');
+                $(this).before('<span>&#934;</span>');
+            });
+
+            checkboxs.change(function () {
+                if ($(this).is(':checked')) {
+                    $(this).parent().addClass('customCheckboxChecked');
+                } else {
+                    $(this).parent().removeClass('customCheckboxChecked');
+                }
+            });
+        })
+
+
+        //défilement des images de l'hotel
+        $(".slideshow ul").each(function () {
+            var nbrPic = $(this).children().length;
+            $(this).css("width", (nbrPic * 100) + "%");
+        });
+
+        $(function () {
+            setInterval(function () {
+                $(".slideshow").each(function () {
+                    var ul = $(this).children("ul");
+                    var li = $(ul).children("li:first-child");
+                    $(li).animate({ "margin-left": -330 }, 2500, function () {
+                        $(this).css("margin-left", 0).appendTo(ul);
+                    });
+                });
+            }, 3500);
+        });
+       
+    });
+</script>
+

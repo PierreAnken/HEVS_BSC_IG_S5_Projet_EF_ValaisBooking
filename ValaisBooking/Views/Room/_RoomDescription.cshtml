@@ -1,0 +1,23 @@
+﻿@using BLL
+@using DTO
+@model Room
+
+<div class="col-md-12">
+    <h2>Chambre @Model.Number</h2>
+</div>
+<div class="col-md-12">
+    <text>@Html.Raw(Model.Description)</text>
+</div>
+<div class="col-md-12">
+    <h2>Photos</h2>
+</div>
+    @{
+        foreach (Picture picture in PictureManager.GetPictureFromRoomId(Model.IdRoom))
+        {
+            <div class="col-md-12">
+                <img src="@picture.Url" class="img-fluid" />
+            </div>
+
+        }
+    }
+

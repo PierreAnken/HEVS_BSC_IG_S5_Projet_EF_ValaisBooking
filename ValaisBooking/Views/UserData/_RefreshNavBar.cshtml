@@ -1,0 +1,26 @@
+﻿@using DTO;
+
+@{
+    if (!((UserData)Session["UserData"]).IsEmpty)
+    {
+        <li class="nav-item dropdown ml-auto">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Bonjour @(((UserData)Session["UserData"]).FirstName)
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                @Html.ActionLink("Mes réservations", "UserReservationOverview", "Reservation", null, new { @class = "dropdown-item" })
+                <div class="dropdown-divider"></div>
+                @Html.ActionLink("Se déconnecter", "Logout", "Login", null, new { @class = "dropdown-item" })
+            </div>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            @Html.ActionLink("Se connecter", "Login", "Login", null, new { @class = "nav-link" })
+        </li>
+        <li class="nav-item">
+            @Html.ActionLink("S'enregistrer", "Register", "Login", null, new { @class = "nav-link" })
+        </li>
+        }
+    }
