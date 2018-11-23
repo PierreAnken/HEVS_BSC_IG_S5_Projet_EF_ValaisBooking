@@ -14,21 +14,11 @@ namespace WebServiceRest
     
     public partial class Reservation
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Reservation()
-        {
-            this.Rooms = new HashSet<Room>();
-        }
-    
         public int IdReservation { get; set; }
         public int IdUser { get; set; }
         public System.DateTime FirstNight { get; set; }
         public System.DateTime LastNight { get; set; }
         public bool Cancelled { get; set; }
         public double Price { get; set; }
-    
-        public virtual UserData UserData { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Room> Rooms { get; set; }
     }
 }

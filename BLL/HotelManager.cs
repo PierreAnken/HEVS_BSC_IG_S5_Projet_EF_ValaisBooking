@@ -3,6 +3,10 @@ using DTO;
 using System.Linq;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using BLL.Helpers;
 
 namespace BLL
 {
@@ -15,7 +19,12 @@ namespace BLL
 
         public static Hotel GetHotelFromId(int IdHotel)
         {
-            return HotelDB.GetHotelFromId(IdHotel);
+                
+                using (HttpClient httpClient = new HttpClient())
+                {
+                    Task<string> response = httpClient.GetStringAsync(UrlHelper.ApiHotelUrl+IdHotel);
+                    return JsonConvert.DeserializeObject<Hotel>(response.Result);
+                }
         }
 
         public static double GetHotelOccupationAtDateFromId(int IdHotel, DateTime Date)

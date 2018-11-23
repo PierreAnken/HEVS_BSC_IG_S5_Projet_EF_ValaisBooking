@@ -179,7 +179,7 @@
           <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Website" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Overview" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Rooms" Relationship="Self.FK_Room_Hotel" FromRole="Hotel" ToRole="Room" />
+          <!--<NavigationProperty Name="Rooms" Relationship="Self.FK_Room_Hotel" FromRole="Hotel" ToRole="Room" />-->
         </EntityType>
         <EntityType Name="Picture">
           <Key>
@@ -188,7 +188,7 @@
           <Property Name="IdPicture" Type="Int32" Nullable="false" />
           <Property Name="Url" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="IdRoom" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Room" Relationship="Self.FK_Picture_Room" FromRole="Picture" ToRole="Room" />
+          <!--<NavigationProperty Name="Room" Relationship="Self.FK_Picture_Room" FromRole="Picture" ToRole="Room" />-->
         </EntityType>
         <EntityType Name="Reservation">
           <Key>
@@ -200,8 +200,8 @@
           <Property Name="LastNight" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="Cancelled" Type="Boolean" Nullable="false" />
           <Property Name="Price" Type="Double" Nullable="false" />
-          <NavigationProperty Name="UserData" Relationship="Self.FK_Reservation_User" FromRole="Reservation" ToRole="UserData" />
-          <NavigationProperty Name="Rooms" Relationship="Self.RoomsInReservation" FromRole="Reservation" ToRole="Room" />
+          <!--<NavigationProperty Name="UserData" Relationship="Self.FK_Reservation_User" FromRole="Reservation" ToRole="UserData" />-->
+          <!--<NavigationProperty Name="Rooms" Relationship="Self.RoomsInReservation" FromRole="Reservation" ToRole="Room" />-->
         </EntityType>
         <EntityType Name="Room">
           <Key>
@@ -215,9 +215,9 @@
           <Property Name="HasTV" Type="Boolean" Nullable="false" />
           <Property Name="HasHairDryer" Type="Boolean" Nullable="false" />
           <Property Name="IdHotel" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Hotel" Relationship="Self.FK_Room_Hotel" FromRole="Room" ToRole="Hotel" />
-          <NavigationProperty Name="Pictures" Relationship="Self.FK_Picture_Room" FromRole="Room" ToRole="Picture" />
-          <NavigationProperty Name="Reservations" Relationship="Self.RoomsInReservation" FromRole="Room" ToRole="Reservation" />
+          <!--<NavigationProperty Name="Hotel" Relationship="Self.FK_Room_Hotel" FromRole="Room" ToRole="Hotel" />-->
+          <!--<NavigationProperty Name="Pictures" Relationship="Self.FK_Picture_Room" FromRole="Room" ToRole="Picture" />-->
+          <!--<NavigationProperty Name="Reservations" Relationship="Self.RoomsInReservation" FromRole="Room" ToRole="Reservation" />-->
         </EntityType>
         <EntityType Name="UserData">
           <Key>
@@ -228,7 +228,7 @@
           <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="PasswordMd5" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Reservations" Relationship="Self.FK_Reservation_User" FromRole="UserData" ToRole="Reservation" />
+          <!--<NavigationProperty Name="Reservations" Relationship="Self.FK_Reservation_User" FromRole="UserData" ToRole="Reservation" />-->
         </EntityType>
         <Association Name="FK_Room_Hotel">
           <End Role="Hotel" Type="Self.Hotel" Multiplicity="1" />
