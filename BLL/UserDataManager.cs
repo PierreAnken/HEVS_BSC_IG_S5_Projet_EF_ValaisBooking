@@ -18,7 +18,7 @@ namespace BLL
             {
                 using (HttpClient httpClient = new HttpClient())
                 {
-                    Task<string> response = httpClient.GetStringAsync(UrlHelper.ApiUserDataUrl + Email);
+                    Task<string> response = httpClient.GetStringAsync(UrlHelper.ApiUserDataUrl + "?email=" + Email);
                     return JsonConvert.DeserializeObject<UserData>(response.Result);
                 }
             }
@@ -28,15 +28,16 @@ namespace BLL
 
         public static bool RegisterUser(UserData newUser) {
 
-            //using (HttpClient httpClient = new HttpClient())
-            //{
-            //    string userData = JsonConvert.SerializeObject(newUser);
-            //    StringContent frame = new StringContent(userData, Encoding.UTF8, "Application/json");
-            //    Task<HttpResponseMessage> response = httpClient.PostAsync(UrlHelper.ApiUserDataUrl, frame);
-            //    return response.Result.IsSuccessStatusCode;
-            //}
-            return true;
-
+            if(!string.IsNullOrEmpty(newUser.Email) && !string.IsNullOrEmpty(newUser.PasswordMd5)) { 
+                using (HttpClient httpClient = new HttpClient())
+                {
+                    string userData = JsonConvert.SerializeObject(newUser);
+                    StringContent frame = new StringContent(userData, Encoding.UTF8, "Application/json");
+                    Task<HttpResponseMessage> response = httpClient.PostAsync(UrlHelper.ApiUserDataUrl, frame);
+                    return response.Result.IsSuccessStatusCode;
+                }
+            }
+            return false;
         }
     }
 }

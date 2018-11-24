@@ -21,5 +21,29 @@ namespace WebServiceRest.Controllers
             }
             return Ok(hotel);
         }
+
+        //GET: api/Hotel/
+        public IHttpActionResult GetAllHotel()
+        {
+            return Ok(DB.Hotels.ToList());
+        }
+
+        //GET: api/Hotel/5?date=01-01-2018
+        //public IHttpActionResult GetHotelOccupationAtDateFromId(int id, DateTime date)
+        //{
+
+         
+
+        //    //get rooms reserved at date
+        //    int roomsReservedQty = DB.Reservations.Where(r => r.)
+                
+
+        //    int roomsQty = DB.Rooms
+        //        .Where(r => r.IdHotel == id)
+        //        .Count();
+
+            
+        //}
+
     }
 }
