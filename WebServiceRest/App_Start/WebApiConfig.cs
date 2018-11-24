@@ -19,13 +19,6 @@ namespace WebServiceRest
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
-            
-            config.Routes.MapHttpRoute(
-                name: "Date",
-                routeTemplate: "api/{controller}/Occupation/{id}",
-                defaults: new { id = RouteParameter.Optional }
-            );
-
         }
     }
 }

@@ -14,17 +14,20 @@ namespace BLL
     {
         public static List<Hotel> GetAllHotel()
         {
-            return HotelDB.GetAllHotel();
+            using (HttpClient httpClient = new HttpClient())
+            {
+                Task<string> response = httpClient.GetStringAsync(UrlHelper.ApiHotelUrl);
+                return JsonConvert.DeserializeObject<List<Hotel>>(response.Result);
+            }
         }
 
         public static Hotel GetHotelFromId(int IdHotel)
-        {
-                
-                using (HttpClient httpClient = new HttpClient())
-                {
-                    Task<string> response = httpClient.GetStringAsync(UrlHelper.ApiHotelUrl+IdHotel);
-                    return JsonConvert.DeserializeObject<Hotel>(response.Result);
-                }
+        {  
+            using (HttpClient httpClient = new HttpClient())
+            {
+                Task<string> response = httpClient.GetStringAsync(UrlHelper.ApiHotelUrl+IdHotel);
+                return JsonConvert.DeserializeObject<Hotel>(response.Result);
+            }
         }
 
         public static double GetHotelOccupationAtDateFromId(int IdHotel, DateTime date)
@@ -32,8 +35,7 @@ namespace BLL
             using (HttpClient httpClient = new HttpClient())
             {
                 ///api/Hotel/Occupation/2?date=2014-07-25
-                string dateS = JsonConvert.SerializeObject(date).Replace("\"","").Replace("\\", "");
-                Task<string> response = httpClient.GetStringAsync(UrlHelper.ApiHotelUrl +"Occupation/"+IdHotel+"?date="+ dateS);
+                Task<string> response = httpClient.GetStringAsync(UrlHelper.ApiHotelUrl +"Occupation/"+IdHotel+"?date="+ UrlHelper.DateTimeToURLParam(date));
                 return JsonConvert.DeserializeObject<double>(response.Result);
             }
         }

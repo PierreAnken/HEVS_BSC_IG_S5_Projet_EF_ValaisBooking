@@ -11,8 +11,9 @@ namespace WebServiceRest.Controllers
 {
     public class HotelController : VBController
     {
-        //GET: api/Hotel/Occupation/5?date=01-01-2018
-        public IHttpActionResult GetHotelOccupationAtDateFromId( int id, [FromUri] DateTime date)
+        //GET: api/Hotel/Occupation/5?date=2018-11-24T00:00:00
+        [Route("api/Hotel/Occupation/{id}")]
+        public IHttpActionResult GetHotelOccupationAtDateFromId(int id, [FromUri] DateTime date)
         {
             return Ok((double)DB.GetHotelOccupationAtDateFromId(date, id).FirstOrDefault());
         }
