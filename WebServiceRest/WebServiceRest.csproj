@@ -159,6 +159,9 @@
     <Compile Include="Controllers\UserDataController.cs" />
     <Compile Include="Controllers\HotelController.cs" />
     <Compile Include="Controllers\VBController.cs" />
+    <Compile Include="GetAllEmptyRoomsAtDateRange_Result.cs">
+      <DependentUpon>WebServiceValaisBooking.tt</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

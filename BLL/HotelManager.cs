@@ -27,9 +27,15 @@ namespace BLL
                 }
         }
 
-        public static double GetHotelOccupationAtDateFromId(int IdHotel, DateTime Date)
+        public static double GetHotelOccupationAtDateFromId(int IdHotel, DateTime date)
         {
-            return HotelDB.GetHotelOccupationAtDateFromId(IdHotel, Date);
+            using (HttpClient httpClient = new HttpClient())
+            {
+                ///api/Hotel/Occupation/2?date=2014-07-25
+                string dateS = JsonConvert.SerializeObject(date).Replace("\"","").Replace("\\", "");
+                Task<string> response = httpClient.GetStringAsync(UrlHelper.ApiHotelUrl +"Occupation/"+IdHotel+"?date="+ dateS);
+                return JsonConvert.DeserializeObject<double>(response.Result);
+            }
         }
     }
 }

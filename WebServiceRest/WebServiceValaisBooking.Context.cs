@@ -12,6 +12,8 @@ namespace WebServiceRest
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class VB_WebServiceDB : DbContext
     {
@@ -30,5 +32,40 @@ namespace WebServiceRest
         public virtual DbSet<Reservation> Reservations { get; set; }
         public virtual DbSet<Room> Rooms { get; set; }
         public virtual DbSet<UserData> UserDatas { get; set; }
+    
+        public virtual ObjectResult<GetAllEmptyRoomsAtDateRange_Result> GetAllEmptyRoomsAtDateRange(Nullable<System.DateTime> firstNight, Nullable<System.DateTime> lastNight)
+        {
+            var firstNightParameter = firstNight.HasValue ?
+                new ObjectParameter("firstNight", firstNight) :
+                new ObjectParameter("firstNight", typeof(System.DateTime));
+    
+            var lastNightParameter = lastNight.HasValue ?
+                new ObjectParameter("lastNight", lastNight) :
+                new ObjectParameter("lastNight", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetAllEmptyRoomsAtDateRange_Result>("GetAllEmptyRoomsAtDateRange", firstNightParameter, lastNightParameter);
+        }
+    
+        public virtual ObjectResult<string> GetDistinctPictureUrlFromHotelId(Nullable<int> idHotel)
+        {
+            var idHotelParameter = idHotel.HasValue ?
+                new ObjectParameter("IdHotel", idHotel) :
+                new ObjectParameter("IdHotel", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("GetDistinctPictureUrlFromHotelId", idHotelParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<double>> GetHotelOccupationAtDateFromId(Nullable<System.DateTime> date, Nullable<int> idHotel)
+        {
+            var dateParameter = date.HasValue ?
+                new ObjectParameter("date", date) :
+                new ObjectParameter("date", typeof(System.DateTime));
+    
+            var idHotelParameter = idHotel.HasValue ?
+                new ObjectParameter("IdHotel", idHotel) :
+                new ObjectParameter("IdHotel", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<double>>("GetHotelOccupationAtDateFromId", dateParameter, idHotelParameter);
+        }
     }
 }

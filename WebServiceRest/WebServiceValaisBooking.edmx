@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="ValaisBookingModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="ValaisBookingModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Hotel">
           <Key>
             <PropertyRef Name="IdHotel" />
@@ -131,6 +131,17 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="GetAllEmptyRoomsAtDateRange" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="firstNight" Type="date" Mode="In" />
+          <Parameter Name="lastNight" Type="date" Mode="In" />
+        </Function>
+        <Function Name="GetDistinctPictureUrlFromHotelId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdHotel" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetHotelOccupationAtDateFromId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="date" Type="date" Mode="In" />
+          <Parameter Name="IdHotel" Type="int" Mode="In" />
+        </Function>
         <EntityContainer Name="ValaisBookingModelStoreContainer">
           <EntitySet Name="Hotel" EntityType="Self.Hotel" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Picture" EntityType="Self.Picture" Schema="dbo" store:Type="Tables" />
@@ -159,8 +170,7 @@
             <End Role="RoomsInReservation" EntitySet="RoomsInReservation" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ValaisBookingModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -292,7 +302,28 @@
             <End Role="Reservation" EntitySet="Reservations" />
             <End Role="Room" EntitySet="Rooms" />
           </AssociationSet>
+          <FunctionImport Name="GetAllEmptyRoomsAtDateRange" ReturnType="Collection(ValaisBookingModel.GetAllEmptyRoomsAtDateRange_Result)">
+            <Parameter Name="firstNight" Mode="In" Type="DateTime" />
+            <Parameter Name="lastNight" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="GetDistinctPictureUrlFromHotelId" ReturnType="Collection(String)">
+            <Parameter Name="IdHotel" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetHotelOccupationAtDateFromId" ReturnType="Collection(Double)">
+            <Parameter Name="date" Mode="In" Type="DateTime" />
+            <Parameter Name="IdHotel" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
+        <ComplexType Name="GetAllEmptyRoomsAtDateRange_Result">
+          <Property Type="Int32" Name="IdRoom" Nullable="false" />
+          <Property Type="Int32" Name="Number" Nullable="false" />
+          <Property Type="String" Name="Description" Nullable="false" />
+          <Property Type="Int32" Name="Type" Nullable="false" />
+          <Property Type="Decimal" Name="Price" Nullable="false" Precision="5" Scale="2" />
+          <Property Type="Boolean" Name="HasTV" Nullable="false" />
+          <Property Type="Boolean" Name="HasHairDryer" Nullable="false" />
+          <Property Type="Int32" Name="IdHotel" Nullable="false" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -370,6 +401,22 @@
               <ScalarProperty Name="IdRoom" ColumnName="IdRoom" />
             </EndProperty>
           </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="GetAllEmptyRoomsAtDateRange" FunctionName="ValaisBookingModel.Store.GetAllEmptyRoomsAtDateRange">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ValaisBookingModel.GetAllEmptyRoomsAtDateRange_Result">
+                <ScalarProperty Name="IdRoom" ColumnName="IdRoom" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="HasTV" ColumnName="HasTV" />
+                <ScalarProperty Name="HasHairDryer" ColumnName="HasHairDryer" />
+                <ScalarProperty Name="IdHotel" ColumnName="IdHotel" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetDistinctPictureUrlFromHotelId" FunctionName="ValaisBookingModel.Store.GetDistinctPictureUrlFromHotelId" />
+          <FunctionImportMapping FunctionImportName="GetHotelOccupationAtDateFromId" FunctionName="ValaisBookingModel.Store.GetHotelOccupationAtDateFromId" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
