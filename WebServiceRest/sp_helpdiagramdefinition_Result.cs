@@ -10,17 +10,10 @@
 namespace WebServiceRest
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class Reservation
+    public partial class sp_helpdiagramdefinition_Result
     {
-        public int IdReservation { get; set; }
-        public int IdUser { get; set; }
-        public System.DateTime FirstNight { get; set; }
-        public System.DateTime LastNight { get; set; }
-        public bool Cancelled { get; set; }
-        public double Price { get; set; }
-
-        public List<Room> Rooms { get; set; } = new List<Room>();
+        public Nullable<int> version { get; set; }
+        public byte[] definition { get; set; }
     }
 }

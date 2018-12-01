@@ -130,6 +130,16 @@
     <Content Include="Global.asax" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="WebServiceValaisBooking.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>WebServiceValaisBooking.edmx</DependentUpon>
+      <LastGenOutput>WebServiceValaisBooking.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="WebServiceValaisBooking.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>WebServiceValaisBooking.edmx</DependentUpon>
+      <LastGenOutput>WebServiceValaisBooking.cs</LastGenOutput>
+    </Content>
     <None Include="Scripts\jquery-1.10.2-vsdoc.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -140,15 +150,12 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Web.config" />
-    <Content Include="WebServiceValaisBooking.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>WebServiceValaisBooking.Context.cs</LastGenOutput>
+    <EntityDeploy Include="WebServiceValaisBooking.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>WebServiceValaisBooking.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="WebServiceValaisBooking.edmx.diagram">
       <DependentUpon>WebServiceValaisBooking.edmx</DependentUpon>
-    </Content>
-    <Content Include="WebServiceValaisBooking.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>WebServiceValaisBooking.edmx</DependentUpon>
-      <LastGenOutput>WebServiceValaisBooking.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <ItemGroup>
@@ -181,10 +188,18 @@
     <Compile Include="Room.cs">
       <DependentUpon>WebServiceValaisBooking.tt</DependentUpon>
     </Compile>
+    <Compile Include="RoomsInReservation.cs">
+      <DependentUpon>WebServiceValaisBooking.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_helpdiagramdefinition_Result.cs">
+      <DependentUpon>WebServiceValaisBooking.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_helpdiagrams_Result.cs">
+      <DependentUpon>WebServiceValaisBooking.tt</DependentUpon>
+    </Compile>
     <Compile Include="UserData.cs">
       <DependentUpon>WebServiceValaisBooking.tt</DependentUpon>
     </Compile>
-    <Compile Include="VBController.cs" />
     <Compile Include="WebServiceValaisBooking.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -217,13 +232,6 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
-    <EntityDeploy Include="WebServiceValaisBooking.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>WebServiceValaisBooking.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="WebServiceValaisBooking.edmx.diagram">
-      <DependentUpon>WebServiceValaisBooking.edmx</DependentUpon>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />

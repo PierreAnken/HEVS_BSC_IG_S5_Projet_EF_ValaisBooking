@@ -9,7 +9,7 @@ namespace WebServiceRest.Controllers
 {
     public class VBController : ApiController
     {
-        protected static VB_WebServiceDB DB { get; } = new VB_WebServiceDB();
+        protected static VB_WebServiceEntities1 DB { get; } = new VB_WebServiceEntities1();
 
     }
 }

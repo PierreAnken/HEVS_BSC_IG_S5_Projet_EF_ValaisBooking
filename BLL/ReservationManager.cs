@@ -19,7 +19,12 @@ namespace BLL
         }
 
         public static List<Reservation> GetReservationsFromUserId(int idUser) {
-            return ReservationDB.GetReservationsFromUserId(idUser);
+            using (HttpClient httpClient = new HttpClient())
+            {
+                //GET: api/Reservation/User/{id}
+                Task<string> response = httpClient.GetStringAsync(UrlHelper.ApiReservationUrl +"User/"+ idUser);
+                return JsonConvert.DeserializeObject<List<Reservation>>(response.Result);
+            }
         }
 
         public static Reservation GetReservationsFromId(int idRes) {

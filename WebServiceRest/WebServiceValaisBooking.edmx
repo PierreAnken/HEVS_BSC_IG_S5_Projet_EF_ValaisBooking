@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="ValaisBookingModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="VB_WebServiceModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Hotel">
           <Key>
             <PropertyRef Name="IdHotel" />
@@ -55,9 +55,9 @@
         </EntityType>
         <EntityType Name="RoomsInReservation">
           <Key>
-            <PropertyRef Name="IdRoom" />
-            <PropertyRef Name="IdReservation" />
+            <PropertyRef Name="Id" />
           </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="IdRoom" Type="int" Nullable="false" />
           <Property Name="IdReservation" Type="int" Nullable="false" />
         </EntityType>
@@ -107,30 +107,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_RoomsInReservation_Reservation">
-          <End Role="Reservation" Type="Self.Reservation" Multiplicity="1" />
-          <End Role="RoomsInReservation" Type="Self.RoomsInReservation" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Reservation">
-              <PropertyRef Name="IdReservation" />
-            </Principal>
-            <Dependent Role="RoomsInReservation">
-              <PropertyRef Name="IdReservation" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_RoomsInReservation_Room">
-          <End Role="Room" Type="Self.Room" Multiplicity="1" />
-          <End Role="RoomsInReservation" Type="Self.RoomsInReservation" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Room">
-              <PropertyRef Name="IdRoom" />
-            </Principal>
-            <Dependent Role="RoomsInReservation">
-              <PropertyRef Name="IdRoom" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
+        <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
         <Function Name="GetAllEmptyRoomsAtDateRange" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="firstNight" Type="date" Mode="In" />
           <Parameter Name="lastNight" Type="date" Mode="In" />
@@ -142,7 +119,37 @@
           <Parameter Name="date" Type="date" Mode="In" />
           <Parameter Name="IdHotel" Type="int" Mode="In" />
         </Function>
-        <EntityContainer Name="ValaisBookingModelStoreContainer">
+        <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="VB_WebServiceModelStoreContainer">
           <EntitySet Name="Hotel" EntityType="Self.Hotel" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Picture" EntityType="Self.Picture" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Reservation" EntityType="Self.Reservation" Schema="dbo" store:Type="Tables" />
@@ -161,19 +168,12 @@
             <End Role="Hotel" EntitySet="Hotel" />
             <End Role="Room" EntitySet="Room" />
           </AssociationSet>
-          <AssociationSet Name="FK_RoomsInReservation_Reservation" Association="Self.FK_RoomsInReservation_Reservation">
-            <End Role="Reservation" EntitySet="Reservation" />
-            <End Role="RoomsInReservation" EntitySet="RoomsInReservation" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RoomsInReservation_Room" Association="Self.FK_RoomsInReservation_Room">
-            <End Role="Room" EntitySet="Room" />
-            <End Role="RoomsInReservation" EntitySet="RoomsInReservation" />
-          </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="ValaisBookingModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="VB_WebServiceModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="Hotel">
           <Key>
             <PropertyRef Name="IdHotel" />
@@ -211,7 +211,6 @@
           <Property Name="Cancelled" Type="Boolean" Nullable="false" />
           <Property Name="Price" Type="Double" Nullable="false" />
           <!--<NavigationProperty Name="UserData" Relationship="Self.FK_Reservation_User" FromRole="Reservation" ToRole="UserData" />-->
-          <!--<NavigationProperty Name="Rooms" Relationship="Self.RoomsInReservation" FromRole="Reservation" ToRole="Room" />-->
         </EntityType>
         <EntityType Name="Room">
           <Key>
@@ -227,7 +226,14 @@
           <Property Name="IdHotel" Type="Int32" Nullable="false" />
           <!--<NavigationProperty Name="Hotel" Relationship="Self.FK_Room_Hotel" FromRole="Room" ToRole="Hotel" />-->
           <!--<NavigationProperty Name="Pictures" Relationship="Self.FK_Picture_Room" FromRole="Room" ToRole="Picture" />-->
-          <!--<NavigationProperty Name="Reservations" Relationship="Self.RoomsInReservation" FromRole="Room" ToRole="Reservation" />-->
+        </EntityType>
+        <EntityType Name="RoomsInReservation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdRoom" Type="Int32" Nullable="false" />
+          <Property Name="IdReservation" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="UserData">
           <Key>
@@ -276,15 +282,12 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="RoomsInReservation">
-          <End Role="Reservation" Type="Self.Reservation" Multiplicity="*" />
-          <End Role="Room" Type="Self.Room" Multiplicity="*" />
-        </Association>
-        <EntityContainer Name="VB_WebServiceDB" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="VB_WebServiceEntities1" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Hotels" EntityType="Self.Hotel" />
           <EntitySet Name="Pictures" EntityType="Self.Picture" />
           <EntitySet Name="Reservations" EntityType="Self.Reservation" />
           <EntitySet Name="Rooms" EntityType="Self.Room" />
+          <EntitySet Name="RoomsInReservations" EntityType="Self.RoomsInReservation" />
           <EntitySet Name="UserDatas" EntityType="Self.UserData" />
           <AssociationSet Name="FK_Room_Hotel" Association="Self.FK_Room_Hotel">
             <End Role="Hotel" EntitySet="Hotels" />
@@ -298,11 +301,7 @@
             <End Role="UserData" EntitySet="UserDatas" />
             <End Role="Reservation" EntitySet="Reservations" />
           </AssociationSet>
-          <AssociationSet Name="RoomsInReservation" Association="Self.RoomsInReservation">
-            <End Role="Reservation" EntitySet="Reservations" />
-            <End Role="Room" EntitySet="Rooms" />
-          </AssociationSet>
-          <FunctionImport Name="GetAllEmptyRoomsAtDateRange" ReturnType="Collection(ValaisBookingModel.GetAllEmptyRoomsAtDateRange_Result)">
+          <FunctionImport Name="GetAllEmptyRoomsAtDateRange" ReturnType="Collection(VB_WebServiceModel.GetAllEmptyRoomsAtDateRange_Result)">
             <Parameter Name="firstNight" Mode="In" Type="DateTime" />
             <Parameter Name="lastNight" Mode="In" Type="DateTime" />
           </FunctionImport>
@@ -313,6 +312,36 @@
             <Parameter Name="date" Mode="In" Type="DateTime" />
             <Parameter Name="IdHotel" Mode="In" Type="Int32" />
           </FunctionImport>
+          <FunctionImport Name="sp_alterdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_creatediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_dropdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(VB_WebServiceModel.sp_helpdiagramdefinition_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(VB_WebServiceModel.sp_helpdiagrams_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_renamediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="new_diagramname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_upgraddiagrams" />
         </EntityContainer>
         <ComplexType Name="GetAllEmptyRoomsAtDateRange_Result">
           <Property Type="Int32" Name="IdRoom" Nullable="false" />
@@ -324,14 +353,25 @@
           <Property Type="Boolean" Name="HasHairDryer" Nullable="false" />
           <Property Type="Int32" Name="IdHotel" Nullable="false" />
         </ComplexType>
+        <ComplexType Name="sp_helpdiagramdefinition_Result">
+          <Property Type="Int32" Name="version" Nullable="true" />
+          <Property Type="Binary" Name="definition" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagrams_Result">
+          <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+          <Property Type="Int32" Name="OwnerID" Nullable="false" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="ValaisBookingModelStoreContainer" CdmEntityContainer="VB_WebServiceDB">
+        <EntityContainerMapping StorageEntityContainer="VB_WebServiceModelStoreContainer" CdmEntityContainer="VB_WebServiceEntities1">
           <EntitySetMapping Name="Hotels">
-            <EntityTypeMapping TypeName="ValaisBookingModel.Hotel">
+            <EntityTypeMapping TypeName="VB_WebServiceModel.Hotel">
               <MappingFragment StoreEntitySet="Hotel">
                 <ScalarProperty Name="IdHotel" ColumnName="IdHotel" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -348,7 +388,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Pictures">
-            <EntityTypeMapping TypeName="ValaisBookingModel.Picture">
+            <EntityTypeMapping TypeName="VB_WebServiceModel.Picture">
               <MappingFragment StoreEntitySet="Picture">
                 <ScalarProperty Name="IdPicture" ColumnName="IdPicture" />
                 <ScalarProperty Name="Url" ColumnName="Url" />
@@ -357,7 +397,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Reservations">
-            <EntityTypeMapping TypeName="ValaisBookingModel.Reservation">
+            <EntityTypeMapping TypeName="VB_WebServiceModel.Reservation">
               <MappingFragment StoreEntitySet="Reservation">
                 <ScalarProperty Name="IdReservation" ColumnName="IdReservation" />
                 <ScalarProperty Name="IdUser" ColumnName="IdUser" />
@@ -369,7 +409,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Rooms">
-            <EntityTypeMapping TypeName="ValaisBookingModel.Room">
+            <EntityTypeMapping TypeName="VB_WebServiceModel.Room">
               <MappingFragment StoreEntitySet="Room">
                 <ScalarProperty Name="IdRoom" ColumnName="IdRoom" />
                 <ScalarProperty Name="Number" ColumnName="Number" />
@@ -382,8 +422,17 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="RoomsInReservations">
+            <EntityTypeMapping TypeName="VB_WebServiceModel.RoomsInReservation">
+              <MappingFragment StoreEntitySet="RoomsInReservation">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="IdRoom" ColumnName="IdRoom" />
+                <ScalarProperty Name="IdReservation" ColumnName="IdReservation" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="UserDatas">
-            <EntityTypeMapping TypeName="ValaisBookingModel.UserData">
+            <EntityTypeMapping TypeName="VB_WebServiceModel.UserData">
               <MappingFragment StoreEntitySet="UserData">
                 <ScalarProperty Name="IdUser" ColumnName="IdUser" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />
@@ -393,17 +442,9 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="RoomsInReservation" TypeName="ValaisBookingModel.RoomsInReservation" StoreEntitySet="RoomsInReservation">
-            <EndProperty Name="Reservation">
-              <ScalarProperty Name="IdReservation" ColumnName="IdReservation" />
-            </EndProperty>
-            <EndProperty Name="Room">
-              <ScalarProperty Name="IdRoom" ColumnName="IdRoom" />
-            </EndProperty>
-          </AssociationSetMapping>
-          <FunctionImportMapping FunctionImportName="GetAllEmptyRoomsAtDateRange" FunctionName="ValaisBookingModel.Store.GetAllEmptyRoomsAtDateRange">
+          <FunctionImportMapping FunctionImportName="GetAllEmptyRoomsAtDateRange" FunctionName="VB_WebServiceModel.Store.GetAllEmptyRoomsAtDateRange">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="ValaisBookingModel.GetAllEmptyRoomsAtDateRange_Result">
+              <ComplexTypeMapping TypeName="VB_WebServiceModel.GetAllEmptyRoomsAtDateRange_Result">
                 <ScalarProperty Name="IdRoom" ColumnName="IdRoom" />
                 <ScalarProperty Name="Number" ColumnName="Number" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
@@ -415,8 +456,32 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="GetDistinctPictureUrlFromHotelId" FunctionName="ValaisBookingModel.Store.GetDistinctPictureUrlFromHotelId" />
-          <FunctionImportMapping FunctionImportName="GetHotelOccupationAtDateFromId" FunctionName="ValaisBookingModel.Store.GetHotelOccupationAtDateFromId" />
+          <FunctionImportMapping FunctionImportName="GetDistinctPictureUrlFromHotelId" FunctionName="VB_WebServiceModel.Store.GetDistinctPictureUrlFromHotelId" />
+          <FunctionImportMapping FunctionImportName="GetHotelOccupationAtDateFromId" FunctionName="VB_WebServiceModel.Store.GetHotelOccupationAtDateFromId" />
+          <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="VB_WebServiceModel.Store.sp_alterdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="VB_WebServiceModel.Store.sp_creatediagram" />
+          <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="VB_WebServiceModel.Store.sp_dropdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="VB_WebServiceModel.Store.sp_helpdiagramdefinition">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="VB_WebServiceModel.sp_helpdiagramdefinition_Result">
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="VB_WebServiceModel.Store.sp_helpdiagrams">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="VB_WebServiceModel.sp_helpdiagrams_Result">
+                <ScalarProperty Name="Database" ColumnName="Database" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="VB_WebServiceModel.Store.sp_renamediagram" />
+          <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="VB_WebServiceModel.Store.sp_upgraddiagrams" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

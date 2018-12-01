@@ -22,5 +22,14 @@ namespace WebServiceRest.Controllers
             }
             return Ok(reservation);
         }
-    }
+
+        //GET: api/Reservation/User/{id}
+        [Route("api/Reservation/User/{id}")]
+        public IHttpActionResult GetReservationsFromUserId(int id)
+        {
+            List<Reservation> reservations = DB.Reservations.Join(DB.RoomsInReservations,
+                                                post => post.IdReservation, // Primary Key
+                                                meta => meat.postId, // Foreign Key
+                                                (post, meta) => new { Post = post, Meta = meta });
+        }
 }

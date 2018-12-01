@@ -4,16 +4,16 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="f4ccfb7fda5d42199fe74eab85d70b51" Name="Diagram1" ZoomLevel="86">
-        <EntityTypeShape EntityType="ValaisBookingModel.Hotel" Width="1.5" PointX="3" PointY="4.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="ValaisBookingModel.Picture" Width="1.5" PointX="7.5" PointY="1.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="ValaisBookingModel.Reservation" Width="1.5" PointX="3" PointY="1.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="ValaisBookingModel.Room" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="ValaisBookingModel.UserData" Width="1.5" PointX="0.75" PointY="1.5" IsExpanded="true" />
-        <AssociationConnector Association="ValaisBookingModel.FK_Room_Hotel" ManuallyRouted="false" />
-        <AssociationConnector Association="ValaisBookingModel.FK_Picture_Room" ManuallyRouted="false" />
-        <AssociationConnector Association="ValaisBookingModel.FK_Reservation_User" ManuallyRouted="false" />
-        <AssociationConnector Association="ValaisBookingModel.RoomsInReservation" ManuallyRouted="false" />
+      <Diagram DiagramId="7e58ce17baea4fa2b41c3c6f7804466a" Name="Diagram1">
+        <EntityTypeShape EntityType="VB_WebServiceModel.Hotel" Width="1.5" PointX="0.75" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="VB_WebServiceModel.Picture" Width="1.5" PointX="5.25" PointY="1.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="VB_WebServiceModel.Reservation" Width="1.5" PointX="3" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="VB_WebServiceModel.Room" Width="1.5" PointX="3" PointY="0.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="VB_WebServiceModel.RoomsInReservation" Width="1.5" PointX="5.375" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="VB_WebServiceModel.UserData" Width="1.5" PointX="0.75" PointY="4.25" IsExpanded="true" />
+        <AssociationConnector Association="VB_WebServiceModel.FK_Room_Hotel" ManuallyRouted="false" />
+        <AssociationConnector Association="VB_WebServiceModel.FK_Picture_Room" ManuallyRouted="false" />
+        <AssociationConnector Association="VB_WebServiceModel.FK_Reservation_User" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

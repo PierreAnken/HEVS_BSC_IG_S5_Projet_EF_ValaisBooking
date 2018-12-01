@@ -24,7 +24,7 @@ namespace WebServiceRest.Controllers
             Hotel hotel = DB.Hotels.Where(h => h.IdHotel == id).FirstOrDefault();
             if(hotel == null)
             {
-                return NotFound();
+                hotel = new Hotel();
             }
             return Ok(hotel);
         }
