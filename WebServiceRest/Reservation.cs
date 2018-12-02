@@ -7,6 +7,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+
+
 namespace WebServiceRest
 {
     using System;
@@ -22,5 +24,6 @@ namespace WebServiceRest
         public double Price { get; set; }
 
         public List<Room> Rooms { get; set; } = new List<Room>();
+
     }
 }
