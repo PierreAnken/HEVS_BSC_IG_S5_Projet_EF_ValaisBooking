@@ -12,7 +12,7 @@ namespace BLL
 {
     public class ReservationManager
     {
-        public static int SaveReservation(Reservation reservation)
+        public static bool SaveReservation(Reservation reservation)
         {
             //POST: api/Reservation/
             using (HttpClient httpClient = new HttpClient())
@@ -23,12 +23,12 @@ namespace BLL
                     string reservationData = JsonConvert.SerializeObject(reservation);
                     StringContent frame = new StringContent(reservationData, Encoding.UTF8, "Application/json");
                     Task<HttpResponseMessage> response = httpClient.PostAsync(UrlHelper.ApiReservationUrl, frame);
-                    return JsonConvert.DeserializeObject<int>(response.Result.ToString());
-                    
+                    return true;
+
                 }
                 catch
                 {
-                    return 0;
+                    return false;
                 }
             }
         }
@@ -70,7 +70,15 @@ namespace BLL
 
         public static bool CancelReservationFromId(int IdReservation)
         {
-            return true; //TODO ReservationDB.CancelReservationFromId(IdReservation);
+            try {
+                Reservation reservation = GetReservationsFromId(IdReservation);
+                reservation.Cancelled = true;
+                SaveReservation(reservation);
+                return true;
+            } catch
+            {
+                return false;
+            }
         }
 
         public static double GetInstantPriceFromReservation(Reservation reservation)

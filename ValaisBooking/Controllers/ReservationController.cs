@@ -59,11 +59,16 @@ namespace ValaisBooking.Controllers
                 //on re-calcule le prix actuel, hack javascript...
                 reservation.Price = ReservationManager.GetInstantPriceFromReservation(reservation);
 
-                //insertion de la réservation dans la base et récupération de l'id
-                reservation.IdReservation = ReservationManager.SaveReservation(reservation);
+                //insertion de la réservation dans la base
+                if (ReservationManager.SaveReservation(reservation)) {
 
-                TempData["reservation"] = reservation;
                 return Redirect("/Reservation/_ConfirmedReservation");
+                }
+                else
+                {
+                    TempData["error"] = "Impossible de sauvegarder la reservation";
+                    return RedirectToAction("_ReservationFailed");
+                }
             }
             else
                 return RedirectToAction("_Login", "ModalLogin");

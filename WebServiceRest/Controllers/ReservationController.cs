@@ -32,11 +32,35 @@ namespace WebServiceRest.Controllers
                 {
                     DB.Reservations.Add(reservation);
                     DB.SaveChanges();
-                    return Ok(DB.Reservations.LastOrDefault().IdReservation);
+
+                    reservation.IdReservation = DB.Reservations.Max(r => r.IdReservation);
+
+                    //save the rooms
+                    reservation.Rooms.ForEach(r => {
+                        DB.RoomsInReservations.Add(new RoomsInReservation { IdRoom = r.IdRoom, IdReservation = reservation.IdReservation });
+                    });
+
+                    DB.SaveChanges();
+                    
+                    return Ok(reservation.IdReservation);
                 }
                 else
                 {
+                    //we delete old rooms
+                    dbReservation.Rooms.ForEach(r => {
+
+                        RoomsInReservation roomsInReservation = DB.RoomsInReservations
+                            .Where(rir => rir.IdReservation == reservation.IdReservation 
+                             && rir.IdRoom == r.IdRoom)
+                            .FirstOrDefault();
+
+                        DB.RoomsInReservations.Remove(roomsInReservation);
+                    });
                     dbReservation = reservation;
+                    //save the rooms
+                    dbReservation.Rooms.ForEach(r => {
+                        DB.RoomsInReservations.Add(new RoomsInReservation { IdRoom = r.IdRoom, IdReservation = reservation.IdReservation });
+                    });
                     DB.SaveChanges();
                     return Ok(reservation.IdReservation);
                 }

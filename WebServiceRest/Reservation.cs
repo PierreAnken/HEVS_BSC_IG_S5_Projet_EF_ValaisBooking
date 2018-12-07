@@ -13,7 +13,8 @@ namespace WebServiceRest
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations.Schema;
+
     public partial class Reservation
     {
         public int IdReservation { get; set; }
@@ -23,6 +24,7 @@ namespace WebServiceRest
         public bool Cancelled { get; set; }
         public double Price { get; set; }
 
+        [NotMapped]
         public List<Room> Rooms { get; set; } = new List<Room>();
 
     }
