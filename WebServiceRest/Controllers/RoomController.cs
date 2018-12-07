@@ -28,6 +28,12 @@ namespace WebServiceRest.Controllers
         //GET: api/Room/id
         public IHttpActionResult GetRoomFromId(int id)
         {
+            Room room = (DB.Rooms.Where(r => r.IdRoom == id).FirstOrDefault();
+
+            if(room == null)
+            {
+                return NotFound();
+            }
             return Ok(DB.Rooms.Where(r => r.IdRoom == id).FirstOrDefault());
         }
 
@@ -35,6 +41,10 @@ namespace WebServiceRest.Controllers
         [Route("api/Room/Empty")]
         public IHttpActionResult GetAllEmptyRoomsAtDateRange([FromUri] DateTime firstNight, [FromUri] DateTime lastNight)
         {
+            List<GetAllEmptyRoomsAtDateRange_Result> rooms = DB.GetAllEmptyRoomsAtDateRange(firstNight, lastNight).ToList();
+            if(rooms.Count() == 0) {
+                return NotFound();
+            }
             return Ok(DB.GetAllEmptyRoomsAtDateRange(firstNight, lastNight));
         }
     }

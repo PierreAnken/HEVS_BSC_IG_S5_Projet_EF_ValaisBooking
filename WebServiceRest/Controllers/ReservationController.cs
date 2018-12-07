@@ -18,7 +18,7 @@ namespace WebServiceRest.Controllers
             Reservation reservation = DB.Reservations.Where(h => h.IdReservation == id).FirstOrDefault();
             if (reservation == null)
             {
-                reservation = new Reservation();
+                return NotFound();
             }
 
             reservation = FillRooms(reservation);
@@ -31,6 +31,11 @@ namespace WebServiceRest.Controllers
         public IHttpActionResult GetReservationsFromUserId(int id)
         {
             List<Reservation> reservations = DB.Reservations.Where(res => res.IdUser == id).ToList();
+
+            if(reservations.Count() == 0)
+            {
+                return NotFound();
+            }
 
             reservations.ForEach(res =>
             {

@@ -24,13 +24,18 @@ namespace WebServiceRest.Controllers
             Hotel hotel = DB.Hotels.Where(h => h.IdHotel == id).FirstOrDefault();
             if(hotel == null)
             {
-                hotel = new Hotel();
+                return NotFound();
             }
             return Ok(hotel);
         }
         //GET: api/Hotel/
         public IHttpActionResult GetAllHotel()
         {
+            List<Hotel> hotels = DB.Hotels.ToList();
+            if (hotels.Count() == 0)
+            {
+                return NotFound();
+            }
             return Ok(DB.Hotels.ToList());
         }
 
