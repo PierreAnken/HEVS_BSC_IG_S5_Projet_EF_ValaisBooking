@@ -21,8 +21,8 @@ namespace WebServiceRest.Controllers
             return Ok(reservation);
         }
 
-        //POST: api/Reservation/
-        [Route("api/Reservation/")]
+        //POST: api/reservation/
+        [Route("api/reservation/")]
         public IHttpActionResult PostReservation(Reservation reservation)
         {
             try

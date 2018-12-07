@@ -23,7 +23,7 @@ namespace BLL
                     string reservationData = JsonConvert.SerializeObject(reservation);
                     StringContent frame = new StringContent(reservationData, Encoding.UTF8, "Application/json");
                     Task<HttpResponseMessage> response = httpClient.PostAsync(UrlHelper.ApiReservationUrl, frame);
-                    return true;
+                    return !response.IsFaulted;
 
                 }
                 catch

@@ -37,7 +37,7 @@ namespace BLL
                     string userData = JsonConvert.SerializeObject(newUser);
                     StringContent frame = new StringContent(userData, Encoding.UTF8, "Application/json");
                     Task<HttpResponseMessage> response = httpClient.PostAsync(UrlHelper.ApiUserDataUrl, frame);
-                    return true;
+                    return !response.IsFaulted;
                 }
                 catch
                 {
