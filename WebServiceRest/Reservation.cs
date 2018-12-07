@@ -18,8 +18,8 @@ namespace WebServiceRest
     {
         public int IdReservation { get; set; }
         public int IdUser { get; set; }
-        public System.DateTime FirstNight { get; set; }
-        public System.DateTime LastNight { get; set; }
+        public DateTime FirstNight { get; set; }
+        public DateTime LastNight { get; set; }
         public bool Cancelled { get; set; }
         public double Price { get; set; }
 

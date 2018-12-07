@@ -1,6 +1,4 @@
-﻿using DAL;
-using DTO;
-using System.Linq;
+﻿using DTO;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;

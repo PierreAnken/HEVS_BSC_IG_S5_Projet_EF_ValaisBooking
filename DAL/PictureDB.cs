@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using DTO;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.IO;
-using System.Reflection;
 
 namespace DAL
 {

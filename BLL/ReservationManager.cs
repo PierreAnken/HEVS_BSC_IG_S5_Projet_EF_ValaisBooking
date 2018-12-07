@@ -1,5 +1,4 @@
 ﻿using BLL.Helpers;
-using DAL;
 using DTO;
 using Newtonsoft.Json;
 using System;
@@ -15,7 +14,23 @@ namespace BLL
     {
         public static int SaveReservation(Reservation reservation)
         {
-            return ReservationDB.SaveReservation(reservation);
+            //POST: api/Reservation/
+            using (HttpClient httpClient = new HttpClient())
+            {
+                try
+                {
+                    
+                    string reservationData = JsonConvert.SerializeObject(reservation);
+                    StringContent frame = new StringContent(reservationData, Encoding.UTF8, "Application/json");
+                    Task<HttpResponseMessage> response = httpClient.PostAsync(UrlHelper.ApiReservationUrl, frame);
+                    return JsonConvert.DeserializeObject<int>(response.Result.ToString());
+                    
+                }
+                catch
+                {
+                    return 0;
+                }
+            }
         }
 
         public static List<Reservation> GetReservationsFromUserId(int idUser)
@@ -55,7 +70,7 @@ namespace BLL
 
         public static bool CancelReservationFromId(int IdReservation)
         {
-            return ReservationDB.CancelReservationFromId(IdReservation);
+            return true; //TODO ReservationDB.CancelReservationFromId(IdReservation);
         }
 
         public static double GetInstantPriceFromReservation(Reservation reservation)

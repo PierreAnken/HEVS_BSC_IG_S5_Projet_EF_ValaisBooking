@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Runtime.Serialization;
 using System.Web.Http;
-using System.Data.Entity;
 
 namespace WebServiceRest.Controllers
 {
@@ -26,20 +21,46 @@ namespace WebServiceRest.Controllers
             return Ok(reservation);
         }
 
+        //POST: api/Reservation/
+        [Route("api/Reservation/")]
+        public IHttpActionResult PostReservation(Reservation reservation)
+        {
+            try
+            {
+                Reservation dbReservation = DB.Reservations.Find(reservation.IdReservation);
+                if (dbReservation == null)
+                {
+                    DB.Reservations.Add(reservation);
+                    DB.SaveChanges();
+                    return Ok(DB.Reservations.LastOrDefault().IdReservation);
+                }
+                else
+                {
+                    dbReservation = reservation;
+                    DB.SaveChanges();
+                    return Ok(reservation.IdReservation);
+                }
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
         //GET: api/Reservation/User/{id}
         [Route("api/Reservation/User/{id}")]
         public IHttpActionResult GetReservationsFromUserId(int id)
         {
             List<Reservation> reservations = DB.Reservations.Where(res => res.IdUser == id).ToList();
 
-            if(reservations.Count() == 0)
+            if (reservations.Count() == 0)
             {
                 return NotFound();
             }
 
             reservations.ForEach(res =>
             {
-               res = FillRooms(res);
+                res = FillRooms(res);
             });
 
             return Ok(reservations);
@@ -50,7 +71,8 @@ namespace WebServiceRest.Controllers
             DB.RoomsInReservations.Where(rir => rir.IdReservation == reservation.IdReservation).ToList().ForEach(rir =>
             {
                 Room room = DB.Rooms.Where(r => r.IdRoom == rir.IdRoom).FirstOrDefault();
-                if(room != null) { 
+                if (room != null)
+                {
                     rooms.Add(room);
                 }
 

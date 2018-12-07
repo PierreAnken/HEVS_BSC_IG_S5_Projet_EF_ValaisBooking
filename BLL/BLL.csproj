@@ -54,10 +54,6 @@
     <Compile Include="UserDataManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DAL\DAL.csproj">
-      <Project>{0CA55A45-D0B4-44CB-A4A9-4670C84D037A}</Project>
-      <Name>DAL</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DTO\DTO.csproj">
       <Project>{bd3fa53c-901f-4ee7-99b5-d95c5e5ebaa3}</Project>
       <Name>DTO</Name>
