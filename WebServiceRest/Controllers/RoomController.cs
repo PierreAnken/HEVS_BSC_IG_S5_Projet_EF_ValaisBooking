@@ -28,7 +28,7 @@ namespace WebServiceRest.Controllers
         //GET: api/Room/id
         public IHttpActionResult GetRoomFromId(int id)
         {
-            Room room = (DB.Rooms.Where(r => r.IdRoom == id).FirstOrDefault();
+            Room room = DB.Rooms.Where(r => r.IdRoom == id).FirstOrDefault();
 
             if(room == null)
             {

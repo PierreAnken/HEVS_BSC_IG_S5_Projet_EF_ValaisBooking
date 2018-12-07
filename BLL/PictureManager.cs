@@ -9,15 +9,22 @@ using System.Threading.Tasks;
 namespace BLL
 {
     public class PictureManager
-    {  
-        public static List<Picture> GetPictureFromRoomId(int IdRoom) {
+    {
+        public static List<Picture> GetPictureFromRoomId(int IdRoom)
+        {
             using (HttpClient httpClient = new HttpClient())
             {
                 //GET: api/Picture/id
-                Task<string> response = httpClient.GetStringAsync(UrlHelper.ApiPictureUrl + IdRoom);
-                return JsonConvert.DeserializeObject<List<Picture>>(response.Result);
+                try
+                {
+                    Task<string> response = httpClient.GetStringAsync(UrlHelper.ApiPictureUrl + IdRoom);
+                    return JsonConvert.DeserializeObject<List<Picture>>(response.Result);
+                }
+                catch
+                {
+                    return new List<Picture>();
+                }
             }
         }
-
     }
 }

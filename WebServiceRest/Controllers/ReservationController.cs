@@ -47,7 +47,6 @@ namespace WebServiceRest.Controllers
         public Reservation FillRooms(Reservation reservation)
         {
             List<Room> rooms = new List<Room>();
-
             DB.RoomsInReservations.Where(rir => rir.IdReservation == reservation.IdReservation).ToList().ForEach(rir =>
             {
                 Room room = DB.Rooms.Where(r => r.IdRoom == rir.IdRoom).FirstOrDefault();

@@ -14,30 +14,38 @@ namespace BLL
 
         public static UserData GetUserFromEmail(string Email)
         {
-            if (!string.IsNullOrEmpty(Email))
+
+            using (HttpClient httpClient = new HttpClient())
             {
-                using (HttpClient httpClient = new HttpClient())
+                try
                 {
                     Task<string> response = httpClient.GetStringAsync(UrlHelper.ApiUserDataUrl + "?email=" + Email);
                     return JsonConvert.DeserializeObject<UserData>(response.Result);
                 }
+                catch
+                {
+                    return new UserData();
+                }
             }
-            else
-                return new UserData();
         }
 
-        public static bool RegisterUser(UserData newUser) {
+        public static bool RegisterUser(UserData newUser)
+        {
 
-            if(!string.IsNullOrEmpty(newUser.Email) && !string.IsNullOrEmpty(newUser.PasswordMd5)) { 
-                using (HttpClient httpClient = new HttpClient())
+            using (HttpClient httpClient = new HttpClient())
+            {
+                try
                 {
                     string userData = JsonConvert.SerializeObject(newUser);
                     StringContent frame = new StringContent(userData, Encoding.UTF8, "Application/json");
                     Task<HttpResponseMessage> response = httpClient.PostAsync(UrlHelper.ApiUserDataUrl, frame);
-                    return response.Result.IsSuccessStatusCode;
+                    return true;
+                }
+                catch
+                {
+                    return false;
                 }
             }
-            return false;
         }
     }
 }
