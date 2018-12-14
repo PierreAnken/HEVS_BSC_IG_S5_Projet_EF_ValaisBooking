@@ -9,7 +9,7 @@ namespace DTO
         public int IdUser { get; set; }
         public DateTime FirstNight { get; set; }
         public DateTime LastNight { get; set; }
-        public List<Room> Rooms { get; set; }
+        public List<int> Rooms { get; set; }
 
         public bool Cancelled { get; set; }
         public double Price { get; set; }

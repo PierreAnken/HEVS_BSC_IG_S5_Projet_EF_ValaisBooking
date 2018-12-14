@@ -4,12 +4,7 @@
 
 @{
     
-    Hotel hotel = HotelManager.GetHotelFromId(
-        Model.Rooms
-            .Select(r => r.IdHotel)
-            .ToList()
-            .FirstOrDefault()
-     );
+    Hotel hotel = HotelManager.GetHotelFromId(RoomManager.GetRoomFromId(Model.Rooms.FirstOrDefault()).IdHotel);
 
     <div class="alert alert-danger"> 
         Vous êtes sur le point <strong>d'annuler</strong>
@@ -21,7 +16,7 @@
 
     <script>
         $("#cancelConfirmed").click(function () {
-            var dataSent = { 'reservationId': @Model.IdReservation};
+            var dataSent = { 'reservationId': '@Model.IdReservation'};
             callModal("Annulation de réservation", "Reservation", "_CancelConfirmed", "POST", null, dataSent);
         });
     </script>

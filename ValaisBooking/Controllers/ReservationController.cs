@@ -48,12 +48,12 @@ namespace ValaisBooking.Controllers
                     );
                 }
 
-                
+
                 Reservation reservation = new Reservation {
                     FirstNight = resSelection.FirstNight,
                     LastNight = resSelection.LastNight,
                     IdUser = ((UserData)Session["UserData"]).IdUser,
-                    Rooms = selectedRoom
+                    Rooms = selectedRoom.Select(r => r.IdRoom).ToList()
                 };
 
                 //on re-calcule le prix actuel, hack javascript...

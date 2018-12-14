@@ -278,7 +278,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BLL\BLL.csproj">
-      <Project>{14ec234e-1dca-432e-842c-d68ebcb23391}</Project>
+      <Project>{14EC234E-1DCA-432E-842C-D68EBCB23391}</Project>
       <Name>BLL</Name>
     </ProjectReference>
     <ProjectReference Include="..\DTO\DTO.csproj">

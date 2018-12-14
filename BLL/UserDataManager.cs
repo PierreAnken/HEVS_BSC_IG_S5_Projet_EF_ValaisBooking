@@ -29,7 +29,6 @@ namespace BLL
 
         public static bool RegisterUser(UserData newUser)
         {
-
             using (HttpClient httpClient = new HttpClient())
             {
                 try
@@ -37,7 +36,9 @@ namespace BLL
                     string userData = JsonConvert.SerializeObject(newUser);
                     StringContent frame = new StringContent(userData, Encoding.UTF8, "Application/json");
                     Task<HttpResponseMessage> response = httpClient.PostAsync(UrlHelper.ApiUserDataUrl, frame);
-                    return !response.IsFaulted;
+                    response.Wait();
+                    return response.IsFaulted;
+                    
                 }
                 catch
                 {

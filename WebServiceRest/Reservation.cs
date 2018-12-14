@@ -15,17 +15,17 @@ namespace WebServiceRest
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    public partial class Reservation
+    public class Reservation
     {
         public int IdReservation { get; set; }
         public int IdUser { get; set; }
         public DateTime FirstNight { get; set; }
         public DateTime LastNight { get; set; }
+        public List<int> Rooms { get; set; } = new List<int>();
+
         public bool Cancelled { get; set; }
         public double Price { get; set; }
-
-        [NotMapped]
-        public List<Room> Rooms { get; set; } = new List<Room>();
+        
 
     }
 }

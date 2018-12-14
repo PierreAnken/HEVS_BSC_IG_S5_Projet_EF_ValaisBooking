@@ -25,11 +25,8 @@
             </div>
             foreach (Reservation reservation in Model)
             {
-
-                Hotel hotel = HotelManager.GetHotelFromId(
-                    reservation.Rooms
-                    .Select(r => r.IdHotel)
-                    .FirstOrDefault());
+                
+                Hotel hotel = HotelManager.GetHotelFromId(RoomManager.GetRoomFromId(reservation.Rooms.FirstOrDefault()).IdHotel);
 
                 <div class="col-md-12 row reservationBlock rounded" reservationId ="@reservation.IdReservation">
                     <div class="col-md-1 colContent">@reservation.IdReservation</div>
@@ -65,8 +62,10 @@
                         <div class="col-md-4 enTete">Options</div>
 
                         @{
-                            foreach (Room room in reservation.Rooms)
+                            foreach (int roomId in reservation.Rooms)
                             {
+                                Room room = RoomManager.GetRoomFromId(roomId);
+
                                 <div class="col-md-4 colContent">
                                     @room.IdRoom
                                 </div>

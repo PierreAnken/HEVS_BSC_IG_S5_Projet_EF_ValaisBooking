@@ -21,8 +21,9 @@ namespace WebServiceRest.Controllers
             return Ok(reservation);
         }
 
-        //POST: api/reservation/
-        [Route("api/reservation/")]
+        //POST: api/Reservation/addUpdate/
+        [HttpPost]
+        [Route("api/Reservation/addUpdate/")]
         public IHttpActionResult PostReservation(Reservation reservation)
         {
             try
@@ -37,7 +38,7 @@ namespace WebServiceRest.Controllers
 
                     //save the rooms
                     reservation.Rooms.ForEach(r => {
-                        DB.RoomsInReservations.Add(new RoomsInReservation { IdRoom = r.IdRoom, IdReservation = reservation.IdReservation });
+                        DB.RoomsInReservations.Add(new RoomsInReservation { IdRoom = r, IdReservation = reservation.IdReservation });
                     });
 
                     DB.SaveChanges();
@@ -46,21 +47,14 @@ namespace WebServiceRest.Controllers
                 }
                 else
                 {
-                    //we delete old rooms
-                    dbReservation.Rooms.ForEach(r => {
+                    //update reservation
+                    dbReservation.Rooms = new List<int>(reservation.Rooms);
+                    dbReservation.FirstNight = reservation.FirstNight;
+                    dbReservation.LastNight = reservation.LastNight;
+                    dbReservation.Price = reservation.Price;
+                    dbReservation.IdUser = reservation.IdUser;
+                    dbReservation.Cancelled = reservation.Cancelled;
 
-                        RoomsInReservation roomsInReservation = DB.RoomsInReservations
-                            .Where(rir => rir.IdReservation == reservation.IdReservation 
-                             && rir.IdRoom == r.IdRoom)
-                            .FirstOrDefault();
-
-                        DB.RoomsInReservations.Remove(roomsInReservation);
-                    });
-                    dbReservation = reservation;
-                    //save the rooms
-                    dbReservation.Rooms.ForEach(r => {
-                        DB.RoomsInReservations.Add(new RoomsInReservation { IdRoom = r.IdRoom, IdReservation = reservation.IdReservation });
-                    });
                     DB.SaveChanges();
                     return Ok(reservation.IdReservation);
                 }
@@ -91,15 +85,14 @@ namespace WebServiceRest.Controllers
         }
         public Reservation FillRooms(Reservation reservation)
         {
-            List<Room> rooms = new List<Room>();
+            List<int> rooms = new List<int>();
             DB.RoomsInReservations.Where(rir => rir.IdReservation == reservation.IdReservation).ToList().ForEach(rir =>
             {
                 Room room = DB.Rooms.Where(r => r.IdRoom == rir.IdRoom).FirstOrDefault();
                 if (room != null)
                 {
-                    rooms.Add(room);
+                    rooms.Add(room.IdRoom);
                 }
-
             });
             reservation.Rooms = rooms;
 

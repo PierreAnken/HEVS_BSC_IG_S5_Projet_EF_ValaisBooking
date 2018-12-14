@@ -14,15 +14,16 @@ namespace BLL
     {
         public static bool SaveReservation(Reservation reservation)
         {
-            //POST: api/Reservation/
+            
             using (HttpClient httpClient = new HttpClient())
             {
                 try
                 {
-                    
+                    //POST: api/Reservation/addUpdate/
                     string reservationData = JsonConvert.SerializeObject(reservation);
                     StringContent frame = new StringContent(reservationData, Encoding.UTF8, "Application/json");
-                    Task<HttpResponseMessage> response = httpClient.PostAsync(UrlHelper.ApiReservationUrl, frame);
+                    Task<HttpResponseMessage> response = httpClient.PostAsync(UrlHelper.ApiReservationUrl+ "addUpdate/", frame);
+                    response.Wait();
                     return !response.IsFaulted;
 
                 }
@@ -37,9 +38,9 @@ namespace BLL
         {
             using (HttpClient httpClient = new HttpClient())
             {
-                //GET: api/Reservation/User/{id}
                 try
                 {
+                    //GET: api/Reservation/User/{id}
                     Task<string> response = httpClient.GetStringAsync(UrlHelper.ApiReservationUrl + "User/" + idUser);
                     return JsonConvert.DeserializeObject<List<Reservation>>(response.Result);
                 }
@@ -55,9 +56,10 @@ namespace BLL
         {
             using (HttpClient httpClient = new HttpClient())
             {
-                //GET: api/Reservation/id
+               
                 try
                 {
+                    //GET: api/Reservation/id
                     Task<string> response = httpClient.GetStringAsync(UrlHelper.ApiReservationUrl + idRes);
                     return JsonConvert.DeserializeObject<Reservation>(response.Result);
                 }
@@ -86,21 +88,20 @@ namespace BLL
 
             double price = 0;
 
-            foreach (Room r in reservation.Rooms)
+            foreach (int IdRoom in reservation.Rooms)
             {
+                Room room = RoomManager.GetRoomFromId(IdRoom);
                 for (DateTime day = reservation.FirstNight; day <= reservation.LastNight; day = day.AddDays(1.0))
                 {
                     double hotelOccupationAtDate = HotelManager.GetHotelOccupationAtDateFromId(
-                        reservation.Rooms
-                            .Select(h => h.IdHotel)
-                            .FirstOrDefault()
+                        room.IdHotel
                     , day);
 
                     if (hotelOccupationAtDate < 0.7)
-                        price += (int)r.Price;
+                        price += (int)room.Price;
                     else
                     {
-                        price += (int)((double)r.Price * 1.2);
+                        price += (int)((double)room.Price * 1.2);
                     }
                 }
             }
